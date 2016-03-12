@@ -12,8 +12,6 @@ return array(
     'RandomLib' => array($vendorDir . '/ircmaxell/random-lib/lib'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log'),
     'Prophecy\\' => array($vendorDir . '/phpspec/prophecy/src'),
-    'OAuth\\Unit' => array($vendorDir . '/lusitanian/oauth/tests'),
-    'OAuth' => array($vendorDir . '/lusitanian/oauth/src'),
     'Doctrine\\DBAL\\' => array($vendorDir . '/doctrine/dbal/lib'),
     'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/lib'),
     'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib'),

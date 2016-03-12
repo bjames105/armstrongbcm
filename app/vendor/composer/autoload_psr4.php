@@ -23,6 +23,7 @@ return array(
     'Seld\\JsonLint\\' => array($vendorDir . '/seld/jsonlint/src/Seld/JsonLint'),
     'Seld\\CliPrompt\\' => array($vendorDir . '/seld/cli-prompt/src'),
     'React\\Promise\\' => array($vendorDir . '/react/promise/src'),
+    'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
     'Pagekit\\System\\' => array($baseDir . '/app/system/src'),
     'Pagekit\\Migration\\' => array($baseDir . '/app/modules/migration/src'),
     'Pagekit\\Installer\\' => array($baseDir . '/app/installer/src'),

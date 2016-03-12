@@ -1,10 +1,15 @@
 module.exports = {
 
+    name: 'comment',
+
     el: '#comments',
 
     data: function () {
         return _.merge({
             posts: [],
+            config: {
+                filter: this.$session.get('comments.filter', {})
+            },
             comments: false,
             pages: 0,
             count: '',
@@ -15,21 +20,28 @@ module.exports = {
         }, window.$data);
     },
 
-    created: function () {
+    ready: function () {
 
-        this.Comments = this.$resource('api/blog/comment/:id');
-        this.config.filter = _.extend({filter: {search: '', status: ''}}, this.config.filter);
+        this.Comments = this.$resource('api/blog/comment{/id}');
+        this.load();
 
         UIkit.init(this.$el);
     },
 
     watch: {
 
-        'config.page': 'load',
+        'config.page': function (page, old) {
+            if (page == old) {
+                return;
+            }
+
+            this.load();
+        },
 
         'config.filter': {
-            handler: function () {
-                this.load(0);
+            handler: function (filter) {
+                this.load();
+                this.$session.set('comments.filter', filter);
             },
             deep: true
         }

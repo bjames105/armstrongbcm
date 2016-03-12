@@ -1,78 +1,13 @@
 [
     {
-        "name": "pagekit/theme-one",
-        "version": "0.10.0",
-        "version_normalized": "0.10.0.0",
-        "dist": {
-            "type": "zip",
-            "url": "https://pagekit.com/package/pagekit/theme-one/0.10.0.zip",
-            "reference": null,
-            "shasum": "cdb96a3f6e508577fa695063143091c91107004c"
-        },
-        "archive": {
-            "exclude": [
-                "!/css"
-            ]
-        },
-        "type": "pagekit-theme",
-        "extra": {
-            "image": "image.jpg"
-        },
-        "installation-source": "dist",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Pagekit",
-                "email": "info@pagekit.com",
-                "homepage": "http://pagekit.com"
-            }
-        ],
-        "description": "Pagekit's default theme."
-    },
-    {
         "name": "pagekit/blog",
-        "version": "0.10.1",
-        "version_normalized": "0.10.1.0",
+        "version": "0.10.2",
+        "version_normalized": "0.10.2.0",
         "dist": {
             "type": "zip",
-            "url": "https://pagekit.com/package/pagekit/blog/0.10.1.zip",
+            "url": "https://pagekit.com/package/pagekit/blog/0.10.2.zip",
             "reference": null,
-            "shasum": "4b380289e8aacd600b56f9c818744431266618f0"
-        },
-        "archive": {
-            "exclude": [
-                "node_modules"
-            ]
-        },
-        "type": "pagekit-extension",
-        "extra": {
-            "icon": "icon.svg",
-            "scripts": "scripts.php"
-        },
-        "installation-source": "dist",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Pagekit",
-                "email": "info@pagekit.com",
-                "homepage": "http://pagekit.com"
-            }
-        ],
-        "description": "A blog extensions with a built-in comment system."
-    },
-    {
-        "name": "pagekit/analytics",
-        "version": "0.10.0",
-        "version_normalized": "0.10.0.0",
-        "dist": {
-            "type": "zip",
-            "url": "https://pagekit.com/package/pagekit/analytics/0.10.0.zip",
-            "reference": null,
-            "shasum": "70d153cf253e6d5dfcb495225a223c7896de8186"
+            "shasum": "c821944656e7676987a8b809eef918182da9eb9d"
         },
         "archive": {
             "exclude": [
@@ -96,105 +31,27 @@
                 "homepage": "http://pagekit.com"
             }
         ],
-        "description": "An analytics extension for your dashboard."
+        "description": "A blog extensions with a built-in comment system."
     },
     {
-        "name": "google/recaptcha",
-        "version": "1.1.2",
-        "version_normalized": "1.1.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/google/recaptcha.git",
-            "reference": "2b7e00566afca82a38a1d3adb8e42c118006296e"
-        },
+        "name": "pagekit/theme-one",
+        "version": "0.10.1",
+        "version_normalized": "0.10.1.0",
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/google/recaptcha/zipball/2b7e00566afca82a38a1d3adb8e42c118006296e",
-            "reference": "2b7e00566afca82a38a1d3adb8e42c118006296e",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.2"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "4.5.*"
-        },
-        "time": "2015-09-02 17:23:59",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.1.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "ReCaptcha\\": "src/ReCaptcha"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "description": "Client library for reCAPTCHA, a free service that protect websites from spam and abuse.",
-        "homepage": "http://www.google.com/recaptcha/",
-        "keywords": [
-            "Abuse",
-            "captcha",
-            "recaptcha",
-            "spam"
-        ]
-    },
-    {
-        "name": "bixie/formmaker",
-        "version": "1.3.2",
-        "version_normalized": "1.3.2.0",
-        "dist": {
-            "type": "zip",
-            "url": "https://pagekit.com/package/bixie/formmaker/1.3.2.zip",
+            "url": "https://pagekit.com/package/pagekit/theme-one/0.10.1.zip",
             "reference": null,
-            "shasum": ""
-        },
-        "require": {
-            "google/recaptcha": "~1.1"
-        },
-        "type": "pagekit-extension",
-        "extra": {
-            "icon": "icon.svg",
-            "scripts": "scripts.php"
-        },
-        "installation-source": "dist",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Bixie",
-                "email": "info@bixie.org",
-                "homepage": "http://formmaker.bixie.org"
-            }
-        ],
-        "description": "Create forms in your Pagekit site. Build forms and manage the submissions."
-    },
-    {
-        "name": "pagekit/hello",
-        "version": "0.10.0",
-        "version_normalized": "0.10.0.0",
-        "dist": {
-            "type": "zip",
-            "url": "https://pagekit.com/package/pagekit/hello/0.10.0.zip",
-            "reference": null,
-            "shasum": "a8ce41f5836c2c518f68ca19be4b7a3ab444c452"
+            "shasum": "9a0dbf1a79b20869ac28f48e525bab73cefee474"
         },
         "archive": {
             "exclude": [
-                "node_modules"
+                "!/css",
+                "!/app"
             ]
         },
-        "type": "pagekit-extension",
+        "type": "pagekit-theme",
         "extra": {
-            "icon": "icon.svg",
-            "scripts": "scripts.php"
+            "image": "image.jpg"
         },
         "installation-source": "dist",
         "license": [
@@ -207,6 +64,6 @@
                 "homepage": "http://pagekit.com"
             }
         ],
-        "description": "A blueprint to develop your own extensions."
+        "description": "Pagekit's default theme."
     }
 ]

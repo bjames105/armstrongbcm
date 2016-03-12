@@ -66,6 +66,8 @@ abstract class PrettyPrinterAbstract
         'Expr_AssignOp_ShiftLeft'      => array(160,  1),
         'Expr_AssignOp_ShiftRight'     => array(160,  1),
         'Expr_AssignOp_Pow'            => array(160,  1),
+        'Expr_YieldFrom'               => array(165,  1),
+        'Expr_Print'                   => array(168,  1),
         'Expr_BinaryOp_LogicalAnd'     => array(170, -1),
         'Expr_BinaryOp_LogicalXor'     => array(180, -1),
         'Expr_BinaryOp_LogicalOr'      => array(190, -1),
@@ -74,9 +76,21 @@ abstract class PrettyPrinterAbstract
 
     protected $noIndentToken;
     protected $canUseSemicolonNamespaces;
+    protected $options;
 
-    public function __construct() {
+    /**
+     * Creates a pretty printer instance using the given options.
+     *
+     * Supported options:
+     *  * bool $shortArraySyntax = false: Whether to use [] instead of array()
+     *
+     * @param array $options Dictionary of formatting options
+     */
+    public function __construct(array $options = []) {
         $this->noIndentToken = '_NO_INDENT_' . mt_rand();
+
+        $defaultOptions = ['shortArraySyntax' => false];
+        $this->options = $options + $defaultOptions;
     }
 
     /**
@@ -111,13 +125,17 @@ abstract class PrettyPrinterAbstract
      * @return string Pretty printed statements
      */
     public function prettyPrintFile(array $stmts) {
-        $p = rtrim($this->prettyPrint($stmts));
+        if (!$stmts) {
+            return "<?php\n\n";
+        }
 
-        $p = preg_replace('/^\?>\n?/', '', $p, -1, $count);
-        $p = preg_replace('/<\?php$/', '', $p);
+        $p = "<?php\n\n" . $this->prettyPrint($stmts);
 
-        if (!$count) {
-            $p = "<?php\n\n" . $p;
+        if ($stmts[0] instanceof Stmt\InlineHTML) {
+            $p = preg_replace('/^<\?php\s+\?>\n?/', '', $p);
+        }
+        if ($stmts[count($stmts) - 1] instanceof Stmt\InlineHTML) {
+            $p = preg_replace('/<\?php$/', '', rtrim($p));
         }
 
         return $p;
@@ -250,12 +268,19 @@ abstract class PrettyPrinterAbstract
      *
      * @param string $string Not to be indented string
      *
-     * @return mixed String marked with $this->noIndentToken's.
+     * @return string String marked with $this->noIndentToken's.
      */
     protected function pNoIndent($string) {
         return str_replace("\n", "\n" . $this->noIndentToken, $string);
     }
 
+    /**
+     * Prints reformatted text of the passed comments.
+     *
+     * @param Comment[] $comments List of comments
+     *
+     * @return string Reformatted text of comments
+     */
     protected function pComments(array $comments) {
         $result = '';
 
