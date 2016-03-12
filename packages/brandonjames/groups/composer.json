@@ -1,0 +1,20 @@
+{
+	"name" : "brandonjames/groups",
+	"version" : "0.1.1",
+	"type" : "pagekit-extension",
+	"title" : "Groups",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Brandon James",
+			"email": "bjames105@outlook.com",
+			"homepage": "http://brandonjamesdev.wordpress.com"
+		}
+	],
+	"extra": {
+		"scripts": "scripts.php"
+	},
+	"archive": {
+		"exclude": ["node_modules"]
+	}
+}
