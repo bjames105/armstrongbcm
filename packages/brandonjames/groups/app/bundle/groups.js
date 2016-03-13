@@ -54,6 +54,7 @@
 
 		data: {
 			groups: window.$data.groups,
+			displayMessage: window.$data.displayMessage,
 			newGroup: { }
 		},
 
@@ -94,6 +95,7 @@
 	};
 
 	Vue.ready(module.exports);
+
 
 /***/ }
 /******/ ]);

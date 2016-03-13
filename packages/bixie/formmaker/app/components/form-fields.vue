@@ -105,15 +105,36 @@
         },
 
         created: function () {
-            this.Fields = this.$resource('api/formmaker/field/:id');
+            this.Fields = this.$resource('api/formmaker/field{/id}');
             this.load();
+        },
+
+        ready: function () {
+
+            var vm = this;
+
+            UIkit.nestable(this.$els.nestable, {
+                maxDepth: 20,
+                group: 'formmaker.fields'
+            }).on('change.uk.nestable', function (e, nestable, el, type) {
+
+                if (type && type !== 'removed') {
+
+                    vm.Fields.save({id: 'updateOrder'}, {
+                        fields: nestable.list()
+                    }).then(vm.load, function () {
+                        this.$notify('Reorder failed.', 'danger');
+                    });
+                }
+            });
+
         },
 
         methods: {
 
             load: function () {
-                return this.Fields.query({form_id: this.formitem.id}, function (data) {
-                    this.$set('fields', data);
+                return this.Fields.query({form_id: this.formitem.id}).then(function (res) {
+                    this.$set('fields', res.data);
                     this.$set('selected', []);
                 });
             },
@@ -122,12 +143,12 @@
 
                 field.data.required = field.data.required ? 0 : 1;
 
-                this.Fields.save({id: field.id}, {field: field}, function () {
+                this.Fields.save({id: field.id}, {field: field}).then(function () {
                     this.load();
                     this.$notify('Field saved.');
-                }, function (message) {
+                }, function (res) {
                     this.load();
-                    this.$notify(message, 'danger');
+                    this.$notify(res.data, 'danger');
                 });
             },
 
@@ -152,13 +173,13 @@
                 }
             },
 
-            getType: function (field) {
+            getFieldType: function (field) {
                 return _.find(this.types, 'id', field.type);
             },
 
             removeFields: function () {
 
-                this.Fields.delete({id: 'bulk'}, {ids: this.selected}, function () {
+                this.Fields.delete({id: 'bulk'}, {ids: this.selected}).then(function () {
                     this.load();
                     this.$notify('Field(s) deleted.');
                 });
@@ -177,7 +198,7 @@
 
                 computed: {
                     type: function () {
-                        return this.$parent.getType(this.field);
+                        return this.$parent.getFieldType(this.field);
                     }
 
                 }
@@ -185,42 +206,7 @@
 
         },
 
-        watch: {
-
-            fields: function () {
-
-                var vm = this;
-
-                // TODO this is still buggy
-                UIkit.nestable(this.$els.nestable, {
-                    maxDepth: 1,
-                    group: 'userprofile.fields'
-                }).off('change.uk.nestable').on('change.uk.nestable', function (e, nestable, el, type) {
-
-                    if (type && type !== 'removed') {
-
-                        vm.Fields.save({id: 'updateOrder'}, {fields: nestable.list()}, function () {
-
-                            // @TODO reload everything on reorder really needed?
-                            vm.load().success(function () {
-
-                                // hack for weird flickr bug
-                                if (el.parent()[0] === nestable.element[0]) {
-                                    setTimeout(function () {
-                                        el.remove();
-                                    }, 50);
-                                }
-                            });
-
-                        }).error(function () {
-                            this.$notify('Reorder failed.', 'danger');
-                        });
-                    }
-                });
-            }
-        },
-
-        mixins: [window.Formmakerfields]
+        mixins: [window.BixieFieldtypes]
 
     };
 

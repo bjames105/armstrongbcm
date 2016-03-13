@@ -19,7 +19,6 @@
 
             <ul id="tab-content" class="uk-switcher uk-margin">
                 <li>
-
                     <div class="uk-margin uk-flex uk-flex-space-between uk-flex-wrap" data-uk-margin>
                         <div data-uk-margin>
 
@@ -46,10 +45,10 @@
                     </div>
 
                     <div class="uk-form-row">
-                        <label class="uk-form-label">Text setting</label>
+                        <label class="uk-form-label">Greeting Message</label>
                         <div class="uk-form-controls uk-form-controls-text">
                             <p class="uk-form-controls-condensed">
-                                <input type="text" class="uk-form-width-large">
+                                <textarea class="uk-form-width-large" name="displayMessage" v-model="config.displayMessage"></textarea>
                             </p>
                         </div>
                     </div>

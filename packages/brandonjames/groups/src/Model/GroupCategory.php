@@ -4,8 +4,6 @@ namespace brandonjames\groups\Model;
 
 use \Pagekit\Application as App;
 use \Pagekit\Database\ORM\ModelTrait;
-use \Pagekit\System\Model\DataModelTrait;
-use \Pagekit\User\Model\AccessModelTrait;
 use \Pagekit\User\Model\User;
 
 /**
@@ -13,11 +11,11 @@ use \Pagekit\User\Model\User;
  */
 class GroupCategory implements \JsonSerializable
 {
-    use AccessModelTrait, DataModelTrait, ModelTrait;
-	
+    use ModelTrait;
+
 	/** @Column(type="integer") @Id */
 	public $id;
-	
+
     /** @Column(type="integer") */
     public $user_id;
 
@@ -38,26 +36,4 @@ class GroupCategory implements \JsonSerializable
 
     /** @Column(type="datetime") */
     public $modified;
-	
-    /**
-     * @BelongsTo(targetEntity="Pagekit\User\Model\User", keyFrom="user_id")
-     */
-    protected $user;
-	
-    protected $groups;
-
-    public function getAuthor()
-    {
-        return $this->user ? $this->user->username : null;
-    }
-	
-    /**
-     * {@inheritdoc}
-     */
-    public function jsonSerialize()
-    {
-        $data = [];
-
-        return $this->toArray($data);
-    }
 }

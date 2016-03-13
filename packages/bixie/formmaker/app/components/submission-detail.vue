@@ -21,7 +21,7 @@
                 <dl class="uk-description-list uk-description-list-horizontal">
                     <template v-for="fieldsubmission in submission.fieldsubmissions">
                         <dt>{{ fieldsubmission.field.label}}</dt>
-                        <dd v-for="value in fieldsubmission.value">{{ value }}</dd>
+                        <dd v-for="value in fieldsubmission.formatted">{{{ value }}}</dd>
                     </template>
                 </dl>
 
@@ -63,8 +63,8 @@
 
         created: function () {
 
-            this.$root.resource.query({id: 'detail', submission_id: this.submissionid}, function (data) {
-                this.$set('submission', data);
+            this.$root.resource.query({id: 'detail', submission_id: this.submissionid}).then(function (res) {
+                this.$set('submission', res.data);
                 this.loaded = true;
             }.bind(this));
 

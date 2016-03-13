@@ -9,24 +9,26 @@ use brandonjames\groups\Model\Group as Group;
 class SiteController
 {
 	/**
-     * @var Module
+     * @var Module config
      */
-	protected $groups;
+	protected $config;
 
 	/**
      * Constructor.
      */
 	public function __construct()
 	{
-		$this->groups = App::module('groups');
+		$this->config = App::module('groups')->config();
 	}
 
 	/**
      * @Route("/")
-     * @Route("/group/{id}", name="id", requirements={"id" = "\d+"})
+     * @Route("/{id}", name="id", requirements={"id" = "\d+"})
      */
 	public function indexAction($id = null)
 	{
+		$displayMessage = $this->config['displayMessage'];
+
 		if (!is_null($id)) {
 			$group = Group::find($id);
 
@@ -40,8 +42,8 @@ class SiteController
 				]
 			];
 		}
-		
-		
+
+
 		$groups = Group::findAll();
 
 		return [
@@ -50,7 +52,21 @@ class SiteController
 				'name' => 'groups:views/index.php'
 			],
 			'$data' => [
-				'groups' => $groups
+				'groups' => $groups,
+				'displayMessage' => $displayMessage
+			]
+		];
+	}
+
+	/**
+	 * @Access("groups: create groups")
+	 */
+	public function createAction()
+	{
+		return [
+			'$view' => [
+				'title' => 'Create a New Group',
+				'name' => 'groups:views/create.php'
 			]
 		];
 	}

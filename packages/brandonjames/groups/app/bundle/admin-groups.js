@@ -54,6 +54,8 @@
 
 		data: {
 			groups: window.$data.groups,
+			searchText: '',
+			groupToDelete: { name: '' },
 			newGroup: { }
 		},
 
@@ -74,11 +76,14 @@
 			},
 
 			remove: function (entry) {
-				this.resource.delete({ id: entry.id }).then(function (data) {
+				this.resource.delete({ id: entry.id }).then(function (resp) {
+					var message = resp.data.message;
 					this.groups.$remove(entry);
-					UIkit.notify(data.message, '');
-				}, function (error) {
-					UIkit.notify(error.data, 'danger');
+					this.groupToDelete = { name: '' };
+					UIkit.notify(message, '');
+				}, function (resp) {
+					var message = resp.data.message;
+					UIkit.notify(message, 'danger');
 				});
 			},
 
@@ -89,11 +94,17 @@
 				}, function (error) {
 					UIkit.notify(error.data, 'danger');
 				});
+			},
+
+			setGroupToDelete: function(group)
+			{
+				this.groupToDelete = group;
 			}
 		}
 	};
 
 	Vue.ready(module.exports);
+
 
 /***/ }
 /******/ ]);

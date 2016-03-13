@@ -30,7 +30,7 @@ module.exports = {
     },
 
     ready: function () {
-        this.Forms = this.$resource('api/formmaker/form/:id');
+        this.Forms = this.$resource('api/formmaker/form{/id}');
         this.tab = UIkit.tab(this.$els.tab, {connect: this.$els.content});
     },
 
@@ -48,8 +48,8 @@ module.exports = {
 
             this.$broadcast('save', data);
 
-            this.Forms.save({id: this.formitem.id}, data, function (data) {
-
+            this.Forms.save({id: this.formitem.id}, data).then(function (res) {
+                data = res.data;
                 if (!this.formitem.id) {
                     window.history.replaceState({}, '', this.$url.route('admin/formmaker/form/edit', {id: data.formitem.id}));
                 }
@@ -88,16 +88,5 @@ module.exports = {
 };
 
 require('../../lib/filters')(Vue);
-
-Vue.field.templates.formrow = require('../../templates/formrow.html');
-Vue.field.templates.raw = require('../../templates/raw.html');
-Vue.field.types.text = '<input type="text" v-bind="attrs" v-model="value">';
-Vue.field.types.textarea = '<textarea v-bind="attrs" v-model="value"></textarea>';
-Vue.field.types.select = '<select v-bind="attrs" v-model="value"><option v-for="option in options" :value="option">{{ $key }}</option></select>';
-Vue.field.types.radio = '<p class="uk-form-controls-condensed"><label v-for="option in options"><input type="radio" :value="option" v-model="value"> {{ $key | trans }}</label></p>';
-Vue.field.types.checkbox = '<p class="uk-form-controls-condensed"><label><input type="checkbox" v-bind="attrs" v-model="value" v-bind:true-value="1" v-bind:false-value="0" number> {{ optionlabel | trans }}</label></p>';
-Vue.field.types.number = '<input type="number" v-bind="attrs" v-model="value" number>';
-Vue.field.types.title = '<h3 v-bind="attrs">{{ title | trans }}</h3>';
-Vue.field.types.editor = '<v-editor :value.sync="value" :options="{markdown : field.markdown}" v-bind="attrs"></v-editor>';
 
 Vue.ready(module.exports);

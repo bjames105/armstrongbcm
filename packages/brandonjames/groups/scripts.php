@@ -16,6 +16,7 @@ return [
 				$table->addColumn('group_category_id', 'string', ['length' => 255, 'default' => '']);
 				$table->addColumn('user_id', 'integer', ['length' => 10]);
 				$table->addColumn('name', 'string', ['length' => 255, 'default' => '']);
+                $table->addColumn('slug', 'string', ['length' => 255, 'default' => '']);
 				$table->addColumn('description', 'string', ['length' => 255, 'default' => '']);
 				$table->addColumn('max_members', 'integer', ['unsigned' => true, 'length' => 10, 'default' => 0]);
 				$table->addColumn('gender', 'string', ['length' => 1, 'default' => 'c']);
@@ -48,7 +49,7 @@ return [
      *
      */
     'enable' => function ($app) {
-		
+
     },
 
     /*

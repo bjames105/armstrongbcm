@@ -45,10 +45,12 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(60)
-
+	var __vue_script__, __vue_template__
+	__vue_script__ = __webpack_require__(41)
+	__vue_template__ = __webpack_require__(42)
+	module.exports = __vue_script__ || {}
 	if (module.exports.__esModule) module.exports = module.exports.default
-	;(typeof module.exports === "function" ? module.exports.options : module.exports).template = __webpack_require__(61)
+	if (__vue_template__) { (typeof module.exports === "function" ? module.exports.options : module.exports).template = __vue_template__ }
 	if (false) {(function () {  module.hot.accept()
 	  var hotAPI = require("vue-hot-reload-api")
 	  hotAPI.install(require("vue"), true)
@@ -57,19 +59,19 @@
 	  if (!module.hot.data) {
 	    hotAPI.createRecord(id, module.exports)
 	  } else {
-	    hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+	    hotAPI.update(id, module.exports, __vue_template__)
 	  }
 	})()}
 
 /***/ },
 
-/***/ 60:
+/***/ 41:
 /***/ function(module, exports) {
 
 	'use strict';
 
 	// <template>
-
+	//
 	//     <div class="uk-form-row">
 	//         <label for="form-link-formmaker" class="uk-form-label">{{ 'Form' | trans }}</label>
 	//         <div class="uk-form-controls">
@@ -78,9 +80,9 @@
 	//             </select>
 	//         </div>
 	//     </div>
-
+	//
 	// </template>
-
+	//
 	// <script>
 
 	module.exports = {
@@ -100,10 +102,10 @@
 
 	    created: function created() {
 	        //TODO don't retrieve entire form objects
-	        this.$resource('api/formmaker/form').get(function (forms) {
-	            this.forms = forms;
-	            if (forms.length) {
-	                this.formid = forms[0].id;
+	        this.$resource('api/formmaker/form').get().then(function (res) {
+	            this.forms = res.data;
+	            if (res.data.length) {
+	                this.formid = res.data[0].id;
 	            }
 	        });
 	    },
@@ -121,13 +123,14 @@
 	window.Links.components['formmaker'] = module.exports;
 
 	// </script>
+	//
 
 /***/ },
 
-/***/ 61:
+/***/ 42:
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"uk-form-row\">\n        <label for=\"form-link-formmaker\" class=\"uk-form-label\">{{ 'Form' | trans }}</label>\n        <div class=\"uk-form-controls\">\n            <select id=\"form-link-formmaker\" class=\"uk-width-1-1\" v-model=\"formid\">\n                <option v-for=\"form in forms\" :value=\"form.id\">{{ form.title }}</option>\n            </select>\n        </div>\n    </div>";
+	module.exports = "\r\n\r\n    <div class=\"uk-form-row\">\r\n        <label for=\"form-link-formmaker\" class=\"uk-form-label\">{{ 'Form' | trans }}</label>\r\n        <div class=\"uk-form-controls\">\r\n            <select id=\"form-link-formmaker\" class=\"uk-width-1-1\" v-model=\"formid\">\r\n                <option v-for=\"form in forms\" :value=\"form.id\">{{ form.title }}</option>\r\n            </select>\r\n        </div>\r\n    </div>\r\n\r\n";
 
 /***/ }
 

@@ -4,8 +4,6 @@ namespace brandonjames\groups\Model;
 
 use \Pagekit\Application as App;
 use \Pagekit\Database\ORM\ModelTrait;
-use \Pagekit\System\Model\DataModelTrait;
-use \Pagekit\User\Model\AccessModelTrait;
 use \Pagekit\User\Model\User;
 
 /**
@@ -13,19 +11,19 @@ use \Pagekit\User\Model\User;
  */
 class Group implements \JsonSerializable
 {
-    use AccessModelTrait, DataModelTrait, ModelTrait;
-	
-	public function __construct()
+    use ModelTrait;
+
+    public function __construct()
     {
-        $this->group_category = new GroupCategory();
+        $this->group_members = new \Doctrine\Common\Collections\ArrayCollection();
     }
-	
+
 	/** @Column(type="integer") @Id */
 	public $id;
-	
+
     /** @Column(type="string") */
     public $group_category_id;
-	
+
     /** @Column(type="integer") */
     public $user_id;
 
@@ -37,7 +35,7 @@ class Group implements \JsonSerializable
 
     /** @Column(type="integer") */
     public $max_members;
-	
+
     /** @Column(type="string") */
     public $gender;
 
@@ -58,30 +56,33 @@ class Group implements \JsonSerializable
 
     /** @Column(type="datetime") */
     public $modified;
-	
-    /**
-     * @BelongsTo(targetEntity="Pagekit\User\Model\User", keyFrom="user_id")
-     */
-    public $user;
-	
-	/**
-     * @OneToOne(targetEntity="brandonjames\groups\Model\GroupCategory")
-     * @JoinColumn(name="group_category_id", referencedColumnName="id")
-     */
-    public $group_category;
-	
-	/** @var array */
-    protected static $properties = [
-        'author' => 'getAuthor',
-        'group_category' => 'getGroupCategory'
-    ];
 
-    public function getAuthor()
+    /** @BelongsTo(targetEntity="\Pagekit\User\Model\User", keyFrom="user_id", keyTo="id") */
+    public $user;
+
+	/** @BelongsTo(targetEntity="\brandonjames\groups\Model\GroupCategory", keyFrom="group_category_id", keyTo="id") */
+    public $group_category;
+
+    /**
+     * @HasMany(targetEntity="\brandonjames\groups\Model\GroupMember", keyFrom="id", keyTo="group_id")
+     */
+    public $group_members;
+
+    public function jsonSerialize()
     {
-        return $this->user ? $this->user->username : null;
+        $data = [];
+        $data['user'] = $this->user;
+        $data['group_category'] = $this->group_category;
+
+        $groupMembers = [];
+
+        foreach ($this->group_members as $member)
+        {
+            $groupMembers[] = $member->user;
+        }
+
+        $data['group_members'] = $groupMembers;
+
+        return $this->toArray($data);
     }
-	
-	public function getGroupCategory() {
-		return $this->group_category ? $this->group_category : null;
-	}
 }

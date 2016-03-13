@@ -13,15 +13,15 @@ module.exports = {
     },
 
     created: function () {
-        this.Forms = this.$resource('api/formmaker/form/:id');
+        this.Forms = this.$resource('api/formmaker/form{/id}');
         this.load();
     },
 
     methods: {
 
         load: function () {
-            return this.Forms.query(function (data) {
-                this.$set('forms', data);
+            return this.Forms.query().then(function (res) {
+                this.$set('forms', res.data);
             });
         },
 
@@ -29,7 +29,7 @@ module.exports = {
 
             formitem.status = formitem.status ? 0 : 1;
 
-            this.Forms.save({id: formitem.id}, {formitem: formitem}, function () {
+            this.Forms.save({id: formitem.id}, {formitem: formitem}).then(function () {
                 this.load();
                 this.$notify('Form saved.');
             }, function (message) {
@@ -55,13 +55,13 @@ module.exports = {
             return this.selected.indexOf(field.id) !== -1;
         },
 
-        getType: function (field) {
+        getFieldType: function (field) {
             return _.find(this.types, 'id', field.type);
         },
 
         removeForms: function () {
 
-            this.Forms.delete({id: 'bulk'}, {ids: this.selected}, function () {
+            this.Forms.delete({id: 'bulk'}, {ids: this.selected}).then(function () {
                 this.load();
                 this.$notify('Forms(s) deleted.');
             });
@@ -79,7 +79,7 @@ module.exports = {
 
             computed: {
                 type: function () {
-                    return this.getType(this.field);
+                    return this.getFieldType(this.field);
                 }
 
             }
@@ -101,7 +101,7 @@ module.exports = {
 
                 if (type && type !== 'removed') {
 
-                    vm.Forms.save({id: 'updateOrder'}, {forms: nestable.list()}, function () {
+                    vm.Forms.save({id: 'updateOrder'}, {forms: nestable.list()}).then(function () {
 
                         // @TODO reload everything on reorder really needed?
                         vm.load().success(function () {
@@ -114,7 +114,7 @@ module.exports = {
                             }
                         });
 
-                    }).error(function () {
+                    }, function () {
                         this.$notify('Reorder failed.', 'danger');
                     });
                 }

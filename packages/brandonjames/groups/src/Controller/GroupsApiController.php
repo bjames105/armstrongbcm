@@ -12,6 +12,19 @@ use brandonjames\groups\Model\Group as Group;
  */
 class GroupsApiController
 {
+	/**
+     * @var Module config
+     */
+	protected $config;
+
+	/**
+     * Constructor.
+     */
+	public function __construct()
+	{
+		$this->config = App::module('groups')->config();
+	}
+
     /**
      * @Route("/", methods="GET")
      */
@@ -26,11 +39,11 @@ class GroupsApiController
 		}
 
 		return [
-			'message' => 'Found ' . sizeof($groups) . ' groups.', 
+			'message' => 'Found ' . sizeof($groups) . ' groups.',
 			'groups' => $groups
 		];
 	}
-	
+
     /**
      * @Route("/{id}", methods="DELETE")
      * @Request({"id": "int"}, csrf=true)
@@ -39,11 +52,11 @@ class GroupsApiController
 	{
 		$group = Group::find($id);
 		$groupName = $group->name;
-		
+
 		if (isset($groupName))
 		{
 			// Delete the group because it exists
-			
+
 			// user without universal access can only edit their own groups
 			if (!App::user()->hasAccess('groups: manage all groups') &&
 				$group->user_id !== App::user()->id)
@@ -53,7 +66,7 @@ class GroupsApiController
 			else if (App::user()->hasAccess('groups: manage own groups'))
 			{
 				$group->delete();
-		
+
 				return [
 					'message' => $groupName . ' was deleted.'
 				];
@@ -65,19 +78,19 @@ class GroupsApiController
 				$group->delete();
 			}
 		}
-		
+
 		return [
 			'message' => $groupName . ' was deleted.'
 		];
 	}
-	
+
     /**
      * @Route("/", methods="POST")
      * @Request({"new_group":"array"}, csrf=true)
      * @Access("groups: create groups")
      */
 	public function addAction($new_group)
-	{	
+	{
 		if (isset($new_group['name']))
 		{
 			// Create the group
@@ -90,13 +103,13 @@ class GroupsApiController
 				'message' => $group->name . ' was created.', 'group' => $group
 			];
 		}
-		
+
 		return [
 			'message' => 'The group does not contain the proper fields.'
 		];
-		
+
 	}
-	
+
 	/**
      * @Route("/", methods="PUT")
      * @Request({"group":"array"}, csrf=true)
@@ -107,23 +120,44 @@ class GroupsApiController
 		{
 			$id = $group['id'];
 			$group = Group::find($id);
-			
+
 			// validate the fields
 			if (isset($group->name))
 			{
 				// Update the group
 				$group->save($group);
-				
+
 				return [
 					'message' => $group->name . ' was updated.'
 				];
 			}
 		}
-		
+
 		return [
 			'message' => 'The group does not contain the proper fields.'
 		];
-		
+
 	}
-	
+
+	/**
+	 * @Route("/update_settings")
+	 * @Method({"GET", "PUT"})
+	 * @Request({"config":"array"}, csrf=true)
+ 	 * @Access("groups: manage all groups")
+	 */
+	public function updateSettingsAction($config)
+	{
+		// Before production I need to make sure that no array values are
+		// inserted that aren't in the base config.
+
+		foreach ($config as $key => $value)
+		{
+			App::config('groups')->set($key, $value);
+		}
+
+		return [
+			'message' => 'The Group application\'s configuration was updated.'
+		];
+	}
+
 }

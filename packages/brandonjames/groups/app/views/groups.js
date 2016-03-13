@@ -8,6 +8,7 @@ module.exports = {
 
 	data: {
 		groups: window.$data.groups,
+		displayMessage: window.$data.displayMessage,
 		newGroup: { }
 	},
 

@@ -1,6 +1,6 @@
 <?php
 $view->style('codemirror');
-$view->script('form-edit', 'bixie/formmaker:app/bundle/form-edit.js', ['vue', 'editor', 'formmaker-formmakerfields', 'uikit-nestable']); ?>
+$view->script('form-edit', 'bixie/formmaker:app/bundle/form-edit.js', ['bixie-fieldtypes', 'editor', 'uikit-nestable']); ?>
 
 <div id="form-edit" v-cloak>
 	<form class="uk-form" v-validator="form" @submit.prevent="save | valid">
@@ -51,7 +51,7 @@ $view->script('form-edit', 'bixie/formmaker:app/bundle/form-edit.js', ['vue', 'e
 				</div>
 			</div>
 			<div>
-				<formfields v-ref:formfields :types="types" :formitem.sync="formitem"></formfields>
+				<formfields v-ref:formfields :types="types" :formitem.sync="formitem" :form="form"></formfields>
 			</div>
 			<div>
 				<appearance :formitem.sync="formitem" :form="form"></appearance>

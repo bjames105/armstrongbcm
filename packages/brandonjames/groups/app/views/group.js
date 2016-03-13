@@ -9,7 +9,7 @@ module.exports = {
 		group: window.$data.group,
 		newGroup: { }
 	},
-	
+
 	methods: {
 		add: function (e) {
 			e.preventDefault();

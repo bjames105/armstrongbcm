@@ -55,7 +55,7 @@
 			group: window.$data.group,
 			newGroup: { }
 		},
-		
+
 		methods: {
 			add: function (e) {
 				e.preventDefault();
@@ -73,6 +73,7 @@
 	}
 
 	Vue.ready(module.exports);
+
 
 /***/ }
 /******/ ]);

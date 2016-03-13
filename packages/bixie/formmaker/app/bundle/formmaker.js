@@ -49,33 +49,15 @@
 
 	    el: '#formmaker-form',
 
-	    data: _.extend({
+	    data: _.assign({
 	        formitem: {},
 	        fields: [],
 	        message: '',
 	        error: '',
 	        thankyou: '',
-	        submission: {
-	            form_id: 0,
-	            status: 1,
-	            data: {}
-	        },
+	        submission: {},
 	        form: {}
 	    }, window.$formmaker),
-
-	    created: function () {
-	        //prepare submission
-	        this.submission.form_id = this.formitem.id;
-	        this.fields.forEach(function (field) {
-	            this.submission.data[field.id] = {
-	                field_id: field.id,
-	                slug: field.slug,
-	                type: field.type,
-	                label: null,
-	                value: null
-	            };
-	        }.bind(this));
-	    },
 
 	    methods: {
 
@@ -88,23 +70,25 @@
 
 	            this.$broadcast('submit', data);
 
-	            this.$http.post('api/formmaker/submission', data, function (data) {
-	                this.message = data.message;
-	                if (data.submission.thankyou) {
-	                    vm.$set('thankyou', data.submission.thankyou);
-	                }
-	                if (data.submission.redirect) {
-	                    window.location.replace(data.submission.redirect);
-	                }
-	            }).error(function (error) {
-	                this.error = this.$trans(error);
-	            });
+	            this.$http.post('api/formmaker/submission', data)
+	                .then(function (res) {
+	                    data = res.data;
+	                    this.message = data.message;
+	                    if (data.submission.thankyou) {
+	                        vm.$set('thankyou', data.submission.thankyou);
+	                    }
+	                    if (data.submission.redirect) {
+	                        window.location.replace(data.submission.redirect);
+	                    }
+	                }, function (error) {
+	                    this.error = this.$trans(error);
+	                });
 	        }
 
 	    },
 
 	    components: {
-	        recaptcha: __webpack_require__(57)
+	        recaptcha: __webpack_require__(38)
 	    }
 
 	};
@@ -116,13 +100,15 @@
 
 /***/ },
 
-/***/ 57:
+/***/ 38:
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(58)
-
+	var __vue_script__, __vue_template__
+	__vue_script__ = __webpack_require__(39)
+	__vue_template__ = __webpack_require__(40)
+	module.exports = __vue_script__ || {}
 	if (module.exports.__esModule) module.exports = module.exports.default
-	;(typeof module.exports === "function" ? module.exports.options : module.exports).template = __webpack_require__(59)
+	if (__vue_template__) { (typeof module.exports === "function" ? module.exports.options : module.exports).template = __vue_template__ }
 	if (false) {(function () {  module.hot.accept()
 	  var hotAPI = require("vue-hot-reload-api")
 	  hotAPI.install(require("vue"), true)
@@ -131,33 +117,30 @@
 	  if (!module.hot.data) {
 	    hotAPI.createRecord(id, module.exports)
 	  } else {
-	    hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+	    hotAPI.update(id, module.exports, __vue_template__)
 	  }
 	})()}
 
 /***/ },
 
-/***/ 58:
+/***/ 39:
 /***/ function(module, exports) {
 
 	'use strict';
 
 	// <template>
-
 	//     <div class="uk-form-row">
-
+	//
 	//         <span class="uk-form-label" v-show="formitem.data.recaptcha_label">{{ formitem.data.recaptcha_label | trans }}</span>
-
+	//
 	//         <div class="uk-form-controls uk-form-controls-text">
-
 	//             <div id="grecaptcha_el"></div>
-
 	//         </div>
-
+	//
 	//     </div>
-
+	//
 	// </template>
-
+	//
 	// <script>
 	window.grecacapthaCallback = function () {
 	    Vue.ready(function () {
@@ -192,13 +175,14 @@
 	};
 
 	// </script>
+	//
 
 /***/ },
 
-/***/ 59:
+/***/ 40:
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"uk-form-row\">\r\n\r\n        <span class=\"uk-form-label\" v-show=\"formitem.data.recaptcha_label\">{{ formitem.data.recaptcha_label | trans }}</span>\r\n\r\n        <div class=\"uk-form-controls uk-form-controls-text\">\r\n            <div id=\"grecaptcha_el\"></div>\r\n        </div>\r\n\r\n    </div>";
+	module.exports = "\r\n    <div class=\"uk-form-row\">\r\n\r\n        <span class=\"uk-form-label\" v-show=\"formitem.data.recaptcha_label\">{{ formitem.data.recaptcha_label | trans }}</span>\r\n\r\n        <div class=\"uk-form-controls uk-form-controls-text\">\r\n            <div id=\"grecaptcha_el\"></div>\r\n        </div>\r\n\r\n    </div>\r\n\r\n";
 
 /***/ }
 

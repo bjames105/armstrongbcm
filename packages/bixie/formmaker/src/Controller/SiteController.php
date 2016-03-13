@@ -2,6 +2,8 @@
 
 namespace Bixie\Formmaker\Controller;
 
+use Bixie\Formmaker\Model\Submission;
+use Bixie\Formmaker\Submission\Fieldsubmission;
 use Pagekit\Application as App;
 use Bixie\Formmaker\Model\Form;
 
@@ -11,6 +13,10 @@ class SiteController {
 	 * @Route("/{id}", name="form/front")
 	 */
 	public function formAction ($id = 0) {
+		if (!$formmaker = App::module('bixie/formmaker')) {
+			return 'Formmaker extension is disabled!';
+		}
+
 		$user = App::user();
 		/** @var Form $form */
 		if (!$form = Form::where(['id = ?'], [$id])->where(function ($query) use ($user) {
@@ -23,7 +29,6 @@ class SiteController {
 		if (!App::node()->hasAccess(App::user())) {
 			App::abort(403, __('Insufficient User Rights.'));
 		}
-		$formmaker = App::module('bixie/formmaker');
 		$app = App::getInstance();
 
 		$form->prepareView($app, $formmaker);
@@ -32,11 +37,6 @@ class SiteController {
 			'$view' => [
 				'title' => __($form->title),
 				'name' => 'bixie/formmaker/form.php'
-			],
-			'$formmaker' => [
-				'config' => $formmaker->publicConfig(),
-				'formitem' => $form,
-				'fields' => array_values($form->getFields())
 			],
 			'node' => App::node()
 		];

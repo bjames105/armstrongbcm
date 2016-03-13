@@ -2,41 +2,46 @@
 
 namespace Bixie\Formmaker;
 
+use Bixie\Formmaker\Model\Submission;
 use Pagekit\Application as App;
 use Bixie\Formmaker\Plugin\FormmakerPlugin;
 use Pagekit\Module\Module;
 use Bixie\Formmaker\Model\Form;
-use Bixie\Formmaker\Type\TypeBase;
 
 class FormmakerModule extends Module {
 	/**
+	 * @var \Bixie\Framework\FrameworkModule
+	 */
+	protected $framework;
+	/**
 	 * @var array
 	 */
-	protected $types;
+	protected $fieldTypes;
 
 	/**
 	 * {@inheritdoc}
 	 */
 	public function main (App $app) {
+		if (!in_array('bixie/framework', App::system()->config('extensions'))) {
+			throw new \RuntimeException('Bixie Framework required for Formmaker');
+		}
+
+		$app->on('boot', function () {
+			$this->framework = App::module('bixie/framework');
+		});
+
 		$app->subscribe(
 			new FormmakerPlugin()
 		);
 
-		$app['field'] = function ($app) {
-			if ($id = $app['request']->attributes->get('_field') and $field = Form::find($id)) {
-				return $field;
-			}
-
-			return new Form;
-		};
 	}
 
 	/**
 	 * @param  string $type
-	 * @return TypeBase
+	 * @return \Bixie\Framework\FieldType\FieldTypeBase
 	 */
-	public function getType ($type) {
-		$types = $this->getTypes();
+	public function getFieldType ($type) {
+		$types = $this->getFieldTypes();
 
 		return isset($types[$type]) ? $types[$type] : null;
 	}
@@ -44,51 +49,12 @@ class FormmakerModule extends Module {
 	/**
 	 * @return array
 	 */
-	public function getTypes () {
-		//todo cache this
-		if (!$this->types) {
-
-			$this->types = [];
-			$app = App::getInstance(); //available for type.php files
-			$paths = [];
-
-			foreach (App::module() as $module) {
-				if ($module->get('formmakerfields')) {
-					$paths = array_merge($paths, glob(sprintf('%s/%s/*/index.php', $module->path, $module->get('formmakerfields')), GLOB_NOSORT) ?: []);
-				}
-			}
-
-			foreach ($paths as $p) {
-				$package = array_merge ([
-					'id' => '',
-					'class' => '\Bixie\Formmaker\Type\Type',
-					'resource' => 'bixie/formmaker:app/bundle',
-					'config' => [
-						'hasOptions' => 0,
-						'readonlyOptions' => 0,
-						'required' => 0,
-						'multiple' => 0,
-					],
-					'dependancies' => [],
-					'styles' => [],
-					'getOptions' => '',
-					'prepareValue' => '',
-					'formatValue' => ''
-				], include($p));
-				$this->registerType($package);
-			}
-
+	public function getFieldTypes () {
+		if (!$this->fieldTypes) {
+			$this->fieldTypes = $this->framework->getFieldTypes('bixie/formmaker');
 		}
 
-		return $this->types;
-	}
-
-	/**
-	 * Register a field type.
-	 * @param array $package
-	 */
-	public function registerType ($package) {
-		$this->types[$package['id']] = new $package['class']($package);
+		return $this->fieldTypes;
 	}
 
 	public function renderForm (App $app, $form_id, $options = [], $view = null) {
@@ -106,14 +72,6 @@ class FormmakerModule extends Module {
 		}
 
 		$form->prepareView($app, $this);
-		$formmaker = $this;
-		$app->on('view.data', function ($event, $data) use ($form, $formmaker) {
-			$data->add('$formmaker', [
-				'config' => $this->publicConfig(),
-				'formitem' => $form,
-				'fields' => array_values($form->getFields())
-			]);
-		});
 
 		return $app->view($view ?: 'bixie/formmaker/form.php');
 	}

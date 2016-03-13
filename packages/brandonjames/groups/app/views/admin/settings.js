@@ -2,20 +2,24 @@ module.exports = {
 
 	el: '#settings',
 
-	data: function () {
-		return window.$data;
+	ready: function () {
+		this.resource = this.$resource('api/groups/update_settings');
+	},
+
+	data: {
+		config: window.$data.config,
 	},
 
 	methods: {
-
-		save: function () {
-			this.$http.post('admin/system/settings/config', { name: 'groups', config: this.config }, function () {
-				this.$notify('Settings saved.');
-			}).error(function (data) {
-				this.$notify(data, 'danger');
+		save: function (config) {
+			this.resource.update({ 'config': window.$data.config}).then(function (resp) {
+				var message = resp.data.message;
+				UIkit.notify(message, '');
+			}, function (error) {
+				var message = error.data.message;
+				UIkit.notify(message, 'danger');
 			});
 		}
-
 	}
 
 };

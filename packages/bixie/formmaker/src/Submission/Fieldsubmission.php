@@ -2,53 +2,32 @@
 
 namespace Bixie\Formmaker\Submission;
 
-use Bixie\Formmaker\Type\TypeBase;
-use Pagekit\Application as App;
-use Pagekit\System\Model\DataModelTrait;
+use Bixie\Framework\FieldValue\FieldValueBase;
 use Bixie\Formmaker\Model\Field;
+use Pagekit\Application as App;
 
-class Fieldsubmission {
-
-	use DataModelTrait;
+class Fieldsubmission extends FieldValueBase {
+	/**
+	 * @var int
+	 */
+	public $field_id;
 
 	/**
-	 * @var Field
+	 * FieldValue constructor.
+	 * @param Field $field
+	 * @param array $value
+	 * @param array $data
 	 */
-	public $field;
-	/**
-	 * @var TypeBase
-	 */
-	public $type;
-
-	/**
-	 * Fieldsubmission constructor.
-	 */
-	public function __construct (Field $field, $data) {
-		$this->field = $field;
+	public function __construct (Field $field, $value, $data) {
+		$this->setField($field);
+		$this->field_id = $field->id;
+		$this->value = is_array($value) ? $value : (!empty($value) ? [$value] : []);
 		$this->data = $data;
-		$this->type = App::module('bixie/formmaker')->getType($field->type);
 	}
 
-	/**
-	 * @return array
-	 */
-	public function toFormattedArray () {
-		return [
-			'field' => $this->field->toArray(),
-			'slug' => $this->field->slug,
-			'type' => $this->type->toArray(),
-			'label' => $this->field->label,
-			'value' => $this->formatValue()
-		];
+	public function toFormattedArray (array $data = [], array $ignore = []) {
+		$data['field_id'] = $this->field_id;
+		return parent::toFormattedArray($data, $ignore);
 	}
 
-	/**
-	 * @return array
-	 */
-	public function formatValue () {
-
-		$value = $this->type->formatValue($this->field, $this->get('value'));
-
-		return is_array($value) ? $value : [$value];
-	}
 }

@@ -5,18 +5,13 @@ return [
 
     'name' => 'groups',
 	'type' => 'extension',
-	
+
 	'config' => [
-		// Sample groups
-		'groups' => [
-			[ 'id' => 1, 'name' => 'Sample Group 1', 'size' => 2 ],
-			[ 'id' => 2, 'name' => 'Sample Group 2', 'size' => 3 ],
-			[ 'id' => 3, 'name' => 'Sample Group 3', 'size' => 4 ],
-		]
+        'displayMessage' => 'Find a place to belong in the Armstrong BCM community'
 	],
-	
+
 	'settings' => '@groups/settings',
-	
+
 	'permissions' => [
 		'groups: create groups' => [
             'title' => 'Create groups',
@@ -31,11 +26,11 @@ return [
 			'description' => 'Allowed to manage groups on the site'
 		]
 	],
-	
+
 	'autoload' => [
 		'brandonjames\\groups\\' => 'src'
 	],
-	
+
 	'resources' => [
 		'groups:' => ''
 	],
@@ -51,7 +46,7 @@ return [
         ]
 
     ],
-	
+
 	'events' => [
         'view.scripts' => function ($event, $scripts) {
             $scripts->register('groupslink', 'groups:app/bundle/link-groups.js', '~panel-link');
@@ -72,7 +67,7 @@ return [
         ]
 
     ],
-	
+
 	'menu' => [
 		'groups' => [
             'label' => 'Groups',
@@ -87,10 +82,18 @@ return [
 			'url' => '@groups/manage',
 			'access' => 'groups: manage all groups'
 		],
+        'groups: categories' => [
+            'label' => 'Categories',
+            'parent' => 'groups',
+            'url' => '@groups/categories',
+            'active' => '@groups/categories',
+            'access' => 'groups: manage all groups'
+        ],
 		'groups: settings' => [
 			'parent' => 'groups',
 			'label' => 'Settings',
 			'url' => '@groups/settings',
+            'active' => '@groups/settings',
 			'access' => 'groups: manage all groups'
 		]
 	],

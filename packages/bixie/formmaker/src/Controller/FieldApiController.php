@@ -2,10 +2,11 @@
 
 namespace Bixie\Formmaker\Controller;
 
-use Bixie\Formmaker\Type\Type;
+use Bixie\Formmaker\Model\Form;
+use Bixie\Formmaker\Model\Field;
 use Pagekit\Application as App;
 use Pagekit\Application\Exception;
-use Bixie\Formmaker\Model\Field;
+use Pagekit\Kernel\Exception\NotFoundException;
 use Pagekit\User\Model\Role;
 
 /**
@@ -22,8 +23,11 @@ class FieldApiController {
 		if (!$form_id) {
 			return [];
 		}
-		$query = Field::where(['form_id = ?'], [$form_id]);
-		return array_values($query->get());
+		if (!$form = Form::find($form_id)) {
+
+			throw new NotFoundException(__('Form not found.'));
+		}
+		return array_values($form->getFields());
 	}
 
 	/**
@@ -38,7 +42,7 @@ class FieldApiController {
 			unset($data['id']);
 		}
 
-		if (!$data['slug'] = $this->slugify($data['slug'] ?: $data['label'])) {
+		if (!$data['slug'] = App::filter($data['slug'] ?: $data['label'], 'slugify')) {
 			App::abort(400, __('Invalid slug.'));
 		}
 
@@ -65,19 +69,25 @@ class FieldApiController {
 		if (is_numeric($id)) {
 			$field = Field::find($id);
 		} else {
-			$field = Field::create();
-			$field->setType($id);
+			$field = Field::create(['data' => [
+				'value' => [],
+				'data' => [],
+				'classSfx' => '',
+				'help_text' => '',
+				'help_show' => ''
+			]]);
+			$field->setFieldType($id);
 		}
 
 		if (!$field) {
 			App::abort(404, __('Field not found.'));
 		}
 
-		if (!$type = $formmaker->getType($field->type)) {
+		if (!$type = $formmaker->getFieldType($field->type)) {
 			App::abort(404, __('Type not found.'));
 		}
 		//default values
-		$fixedFields = ['multiple', 'required'];
+		$fixedFields = ['multiple', 'required', 'controls', 'repeatable'];
 		if (!$field->id) {
 			foreach ($type->getConfig() as $key => $value) {
 				if (!in_array($key, $fixedFields)) $field->set($key, $value);
@@ -85,12 +95,17 @@ class FieldApiController {
 		}
 		//check fixed value
 		foreach ($fixedFields as $key) {
+			if (!isset($type[$key])) $type[$key] = 0;
 			if ($type[$key] != -1) {
 				$field->set($key, $type[$key]);
 			}
 		}
 
-		return ['field' => $field, 'type' => $type, 'roles' => array_values(Role::findAll())];
+		return [
+			'field' => $field,
+			'type' => $type,
+			'roles' => array_values(Role::findAll())
+		];
 	}
 
 	/**
@@ -133,17 +148,6 @@ class FieldApiController {
 		}
 
 		return ['message' => 'success'];
-	}
-
-	protected function slugify ($slug) {
-		$slug = preg_replace('/\xE3\x80\x80/', ' ', $slug);
-		$slug = str_replace('-', ' ', $slug);
-		$slug = preg_replace('#[:\#\*"@+=;!><&\.%()\]\/\'\\\\|\[]#', "\x20", $slug);
-		$slug = str_replace('?', '', $slug);
-		$slug = trim(mb_strtolower($slug, 'UTF-8'));
-		$slug = preg_replace('#\x20+#', '-', $slug);
-
-		return $slug;
 	}
 
 }

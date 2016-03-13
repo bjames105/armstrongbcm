@@ -9,25 +9,13 @@ use Pagekit\Database\ORM\ModelTrait;
 trait FieldModelTrait {
 	use ModelTrait;
 
-	public static function getFormmakerfields () {
-		$user = App::user();
-		$data = [];
-		foreach (self::query()->get() as $field) {
-			if ($field->hasAccess($user)) {
-				$data[] = $field;
-			}
-		}
-		return $data;
-
-	}
-
 	/**
 	 * @Saving
 	 */
 	public static function saving ($event, Field $field) {
 		$formmaker = App::module('bixie/formmaker');
 
-		if (!$type = $formmaker->getType($field->type)) {
+		if (!$type = $formmaker->getFieldType($field->type)) {
 			throw new Exception(__('Field type not found.'));
 		}
 
@@ -43,7 +31,7 @@ trait FieldModelTrait {
 		$id = $field->id;
 
 		if (!$field->slug) {
-			$field->slug = $field->title;
+			$field->slug = $field->label;
 		}
 
 		while (self::where(['slug = ?', 'form_id = ?'], [$field->slug, $field->form_id])->where(function ($query) use ($id) {

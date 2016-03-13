@@ -2,6 +2,7 @@
 
 namespace Bixie\Formmaker\Controller;
 
+use Bixie\Framework\FieldValue\FieldValue;
 use Pagekit\Application as App;
 use Pagekit\Application\Exception;
 use Pagekit\Util\ArrObject;
@@ -62,6 +63,22 @@ class SubmissionApiController {
 
 	}
 
+	/**
+	 * @Route("/ajax", methods="POST")
+	 * @Request({"field_id": "int", "action": "string"})
+	 */
+	public function ajaxAction ($field_id, $action) {
+
+		if (!$field = Field::find($field_id)) {
+			App::abort(400, __('Field not found.'));
+		}
+		$fieldValue = new FieldValue($field, App::request()->get('value', []), App::request()->get('valuedata', []));
+		$fieldType = $fieldValue->getFieldType();
+		if (method_exists($fieldType, $action)) {
+			return call_user_func([$fieldType,$action], $fieldValue);
+		}
+		return 'No response';
+	}
 
 	/**
 	 * @Route("/", methods="POST")
@@ -100,7 +117,7 @@ class SubmissionApiController {
 
 		$submission->email = $submission->getUserEmail();
 
-		if ($id == 0 && $submission->email) {
+		if ($id == 0) {
 			try {
 
 				(new MailHelper($submission))->sendMail();
@@ -145,6 +162,7 @@ class SubmissionApiController {
 	}
 
 	/**
+	 * @Access("formmaker: manage submissions")
 	 * @Route("/{id}", methods="DELETE", requirements={"id"="\d+"})
 	 * @Request({"id": "int"}, csrf=true)
 	 */
@@ -158,6 +176,7 @@ class SubmissionApiController {
 	}
 
 	/**
+	 * @Access("formmaker: manage submissions")
 	 * @Route("/bulk", methods="DELETE")
 	 * @Request({"ids": "array"}, csrf=true)
 	 */
@@ -170,6 +189,7 @@ class SubmissionApiController {
 	}
 
 	/**
+	 * @Access("formmaker: manage submissions")
 	 * @Route("/csv", methods="GET")
 	 * @Request({"options": "array"}, csrf=true)
 	 */
@@ -199,6 +219,7 @@ class SubmissionApiController {
 	}
 
 	/**
+	 * @Access("formmaker: manage submissions")
 	 * @Route("/csv", methods="POST")
 	 * @Request({"options": "array"}, csrf=true)
 	 */
