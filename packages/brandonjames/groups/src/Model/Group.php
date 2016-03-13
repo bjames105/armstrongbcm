@@ -76,9 +76,12 @@ class Group implements \JsonSerializable
 
         $groupMembers = [];
 
-        foreach ($this->group_members as $member)
+        if (sizeof($this->group_members) > 0)
         {
-            $groupMembers[] = $member->user;
+            foreach ($this->group_members as $member)
+            {
+                $groupMembers[] = $member->user;
+            }
         }
 
         $data['group_members'] = $groupMembers;
