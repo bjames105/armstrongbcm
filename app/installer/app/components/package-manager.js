@@ -6,8 +6,6 @@ module.exports = {
 
     data: function () {
 
-        console.log(this)
-
         return _.extend({
             package: {},
             view: false,
@@ -32,13 +30,15 @@ module.exports = {
         load: function () {
             this.$set('status', 'loading');
 
-            this.queryUpdates(this.packages).then(function (res) {
-                var data = res.data;
-                this.$set('updates', data.packages.length ? _.indexBy(data.packages, 'name') : null);
-                this.$set('status', '');
-            }, function () {
-                this.$set('status', 'error');
-            });
+            if (this.packages) {
+                this.queryUpdates(this.packages).then(function (res) {
+                    var data = res.data;
+                    this.$set('updates', data.packages.length ? _.indexBy(data.packages, 'name') : null);
+                    this.$set('status', '');
+                }, function () {
+                    this.$set('status', 'error');
+                });
+            }
         },
 
         icon: function (pkg) {

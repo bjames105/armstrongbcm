@@ -1,5 +1,37 @@
 # Changelog
 
+## 1.0.0 (April 13, 2016)
+
+### Fixed
+- Add roles check to feed action
+
+## 0.11.2 (April 7, 2016)
+
+### Fixed
+- Fixed update URL after comment
+- Fixed different prefixes with SQLLite
+- Fixed SQLite collations
+
+## 0.11.1 (April 1, 2016)
+
+### Changed
+- Use truncated post content as Open Graph description if not explicitly provided 
+
+### Fixed
+- Fixed comments links
+- Fixed wrapping sidebar if content in main column is to large
+- Fixed anonymous comment author not editable
+- Fixed adding posts with permission 'edit own'
+- Fixed deleting posts with permission 'edit own'
+
+## 0.11.0 (March 30, 2016)
+
+### Added
+- Added OpenGraph
+
+### Fixed
+- Fixed RSS feed links
+
 ## 0.10.2 (February 24, 2016)
 
 ### Added

@@ -7,7 +7,8 @@ module.exports = [
 			"admin-groups": "./app/views/admin/groups.js",
             "admin-categories": "./app/views/admin/categories.js",
             "settings": "./app/views/admin/settings.js",
-			"link-groups": "./app/components/groups-link.vue"
+			"link-groups": "./app/components/groups-link.vue",
+            "util": './app/scripts/util.js'
         },
         output: {
             filename: "./app/bundle/[name].js"

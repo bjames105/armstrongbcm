@@ -15,15 +15,19 @@ return [
 	'permissions' => [
 		'groups: create groups' => [
             'title' => 'Create groups',
-            'description' => 'Allowed to create on the site'
+            'description' => 'Allowed to create groups'
 		],
+        'groups: join groups' => [
+            'title' => 'Join groups',
+            'description' => 'Allowed to join groups'
+        ],
 		'groups: manage own groups' => [
 			'title' => 'Manage own groups',
 			'description' => 'Allowed to manage groups owned by the currently logged in user'
 		],
-		'groups: manage groups' => [
+		'groups: manage all groups' => [
 			'title' => 'Manage groups',
-			'description' => 'Allowed to manage groups on the site'
+			'description' => 'Allowed to manage all groups'
 		]
 	],
 

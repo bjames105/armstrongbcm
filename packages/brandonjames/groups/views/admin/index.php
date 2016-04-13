@@ -1,5 +1,4 @@
 <?php $view->script('groups', 'groups:app/bundle/admin-groups.js', 'vue'); ?>
-
 <div id="groups">
     <h2>{{ '{0} Groups|{1} One Group|]1,Inf[ %count% Groups' | transChoice groups.length {count:groups.length} }}</h2>
     <div class="uk-grid uk-form">
@@ -57,7 +56,7 @@
                         <dd>{{ group.active_day }}</dd>
                         <dt>Members</dt>
                         <dd v-for="member in group.group_members">
-                            {{ member.user_id }}
+                            {{ member.name }}
                         </dd>
                     </dl>
                 </div>

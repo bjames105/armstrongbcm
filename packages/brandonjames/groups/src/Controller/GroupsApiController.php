@@ -5,9 +5,10 @@ namespace brandonjames\groups\Controller;
 use \Pagekit\Application as App;
 use \Pagekit\User\Model\User;
 use brandonjames\groups\Model\Group as Group;
+use brandonjames\groups\Model\GroupMember as GroupMember;
 
 /**
- * @Access("groups: manage own groups || groups: manage groups")
+ * @Access("groups: manage own groups || groups: manage all groups")
  * @Route("/")
  */
 class GroupsApiController
@@ -39,7 +40,7 @@ class GroupsApiController
 		}
 
 		return [
-			'message' => 'Found ' . sizeof($groups) . ' groups.',
+			'message' => 'Found ' . sizeof($groups) . ' groups',
 			'groups' => $groups
 		];
 	}
@@ -57,31 +58,30 @@ class GroupsApiController
 		{
 			// Delete the group because it exists
 
-			// user without universal access can only edit their own groups
-			if (!App::user()->hasAccess('groups: manage all groups') &&
-				$group->user_id !== App::user()->id)
+			if (App::user()->hasAccess('groups: manage own groups'))
 			{
-                App::abort(403, __('Access denied.'));
-			}
-			else if (App::user()->hasAccess('groups: manage own groups'))
-			{
-				$group->delete();
+				// An administrator should have access to both managing their
+				// own groups and all groups.
 
-				return [
-					'message' => $groupName . ' was deleted.'
-				];
+				// User with access to their own groups is only allowed to delete
+				// the group if it's their own group.
+
+				if (App::user()->hasAccess('groups: manage all groups')
+					|| $group->user_id = App::user()->id)
+				{
+					// Remember to override this method to include deleting the members
+					$group->delete();
+
+					return [
+						'message' => $groupName . ' was deleted.'
+					];
+				}
+
 			}
 
-			// user without universal access is not allowed to assign groups to other users
-			if (App::user()->hasAccess('groups: manage all groups'))
-			{
-				$group->delete();
-			}
 		}
 
-		return [
-			'message' => $groupName . ' was deleted.'
-		];
+		App::abort(403, __($groupName . ' does not belong to you. You may not delete it.'));
 	}
 
     /**
@@ -89,9 +89,11 @@ class GroupsApiController
      * @Request({"new_group":"array"}, csrf=true)
      * @Access("groups: create groups")
      */
-	public function addAction($new_group)
+	public function createAction($new_group)
 	{
-		if (isset($new_group['name']))
+		$group = new Group();
+		if (isset($new_group['name'])
+			&& isset($new_group['group_category_id']))
 		{
 			// Create the group
 			$group = new Group();
@@ -99,44 +101,103 @@ class GroupsApiController
 			$new_group['created'] = date("Y-m-d H:i:s");
 			$group->save($new_group);
 
+			$groupMember = new GroupMember();
+			$groupMember->user_id = App::user()->id;
+			$groupMember->group_id = $group->id;
+			$groupMember->save();
+
 			return [
-				'message' => $group->name . ' was created.', 'group' => $group
+				'message' => $group->name . ' was created.',
+				'group' => $group
 			];
 		}
 
+		return [ 'error' => true, 'message' => 'The group was not input correctly. Vague, eh?' ];
+
+	}
+
+	/**
+	 * @Route("/{id}")
+	 * @Method({"GET", "PUT"})
+	 * @Request({"group":"array", "id":"int"}, csrf=true)
+ 	 * @Access("groups: manage own groups")
+	 */
+	public function saveAction($group, $id)
+	{
+		$groupData = Group::find($id);
+
+		$groupData->save($group);
+
 		return [
-			'message' => 'The group does not contain the proper fields.'
+			'message' => $group['name'] . ' was updated.'
 		];
 
 	}
 
 	/**
-     * @Route("/", methods="PUT")
-     * @Request({"group":"array"}, csrf=true)
-     */
-	public function saveAction($group)
+	 * @Route("/{id}/join")
+	 * @Method({"GET"})
+	 * @Request({"id":"int"}, csrf=true)
+	 * @Access("groups: join groups")
+	 */
+	public function joinGroupAction($id)
 	{
-		if (isset($group['id']))
-		{
-			$id = $group['id'];
-			$group = Group::find($id);
+		$groupData = Group::find($id);
 
-			// validate the fields
-			if (isset($group->name))
+		if ($groupData)
+		{
+			if (App::user()->hasPermission('groups: join groups'))
 			{
-				// Update the group
-				$group->save($group);
+				$groupMember = new GroupMember();
+				$groupMember->user_id = App::user()->id;
+				$groupMember->group_id = $id;
+				$groupMember->save();
 
 				return [
-					'message' => $group->name . ' was updated.'
+					'message' => 'You have joined ' . $groupData->name,
+					'user' => App::user()
 				];
 			}
+			return [
+				'message' => 'You do not have permission to join groups'
+			];
+
 		}
-
 		return [
-			'message' => 'The group does not contain the proper fields.'
+			'message' => 'That group does not exist'
 		];
+	}
 
+	/**
+	 * @Route("/{id}/leave")
+	 * @Method({"GET"})
+	 * @Request({"id":"int"}, csrf=true)
+	 * @Access("groups: join groups")
+	 */
+	public function leaveGroupAction($id)
+	{
+		$groupData = Group::find($id);
+
+		if ($groupData)
+		{
+			if (App::user()->hasPermission('groups: join groups'))
+			{
+				$groupMember = GroupMember::where('user_id = ? AND group_id = ?', [App::user()->id, $id])->first();
+				$groupMember->delete();
+
+				return [
+					'message' => 'You have left ' . $groupData->name,
+					'user' => App::user()
+				];
+			}
+			return [
+				'message' => 'You do not have permission to join groups'
+			];
+
+		}
+		return [
+			'message' => 'That group does not exist'
+		];
 	}
 
 	/**

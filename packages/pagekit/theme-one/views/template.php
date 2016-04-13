@@ -16,15 +16,14 @@
 
                 <nav class="uk-navbar">
 
-                    <?php if ($params['logo']) : ?>
                     <a class="uk-navbar-brand" href="<?= $view->url()->get() ?>">
-
-                        <img class="tm-logo" src="<?= $this->escape($params['logo']) ?>" alt="">
-
-                        <img class="tm-logo-contrast" src="<?= ($params['logo_contrast']) ? $this->escape($params['logo_contrast']) : $this->escape($params['logo']) ?>" alt="">
-
+                        <?php if ($params['logo']) : ?>
+                            <img class="tm-logo uk-responsive-height" src="<?= $this->escape($params['logo']) ?>" alt="">
+                            <img class="tm-logo-contrast uk-responsive-height" src="<?= ($params['logo_contrast']) ? $this->escape($params['logo_contrast']) : $this->escape($params['logo']) ?>" alt="">
+                        <?php else : ?>
+                            <?= $params['title'] ?>
+                        <?php endif ?>
                     </a>
-                    <?php endif ?>
 
                     <?php if ($view->menu()->exists('main') || $view->position()->exists('navbar')) : ?>
                     <div class="uk-navbar-flip uk-hidden-small">
@@ -75,7 +74,6 @@
                 <div class="uk-grid" data-uk-grid-match data-uk-grid-margin>
 
                     <main class="<?= $view->position()->exists('sidebar') ? 'uk-width-medium-3-4' : 'uk-width-1-1'; ?>">
-                        <?= $view->render('messages') ?>
                         <?= $view->render('content') ?>
                     </main>
 

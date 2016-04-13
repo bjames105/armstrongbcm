@@ -9,6 +9,17 @@ module.exports = {
 	data: {
 		groups: window.$data.groups,
 		displayMessage: window.$data.displayMessage,
+		searchText: '',
+		fields: [ 'name', 'user.name' ],
+		weekdays: {
+			M: 'Monday',
+			T: 'Tuesday',
+			W: 'Wednesday',
+			R: 'Thursday',
+			F: 'Friday',
+			S: 'Saturday',
+			U: 'Sunday'
+		},
 		newGroup: { }
 	},
 
@@ -49,3 +60,44 @@ module.exports = {
 };
 
 Vue.ready(module.exports);
+
+/**
+ * Vue filter to make a simple timestamp for an ISO date.
+ * http://jsfiddle.net/bryan_k/44kqtpeg/
+ *
+ * @param {String} value The value string.
+ */
+Vue.filter('time', function(value) {
+	time = value.split(':');
+	var amPm = 'PM';
+
+	if (parseInt(time[0], 10) > 12)
+	{
+	   var hour = parseInt(time[0], 10) % 12;
+	}
+	else
+	{
+    	var hour = parseInt(time[0], 10);
+	    if (hour == 12)
+		{
+			amPm = 'PM';
+		}
+		else
+		{
+			amPm = 'AM';
+		}
+	}
+
+	return hour + ':' + time[1] + ' ' + amPm;
+});
+
+/**
+ * Vue filter to make a simple timestamp for an ISO date.
+ * http://jsfiddle.net/bryan_k/44kqtpeg/
+ *
+ * @param {String} value The value string.
+ */
+Vue.filter('date', function(value) {
+	var date = new Date(value);
+	return date.toLocaleDateString();
+});

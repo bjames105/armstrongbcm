@@ -14,7 +14,7 @@ return [
 				// ID is randomly generated to prevent bots from spamming requests
                 $table->addColumn('id', 'integer', ['unsigned' => true, 'length' => 10, 'autoincrement' => true]);
                 $table->addColumn('group_category_id', 'integer', ['unsigned' => true, 'length' => 10]);
-				$table->addColumn('user_id', 'integer', ['length' => 10]);
+				$table->addColumn('user_id', 'integer', ['unsigned' => true, 'length' => 10]);
 				$table->addColumn('name', 'string', ['length' => 255, 'default' => '']);
                 $table->addColumn('slug', 'string', ['length' => 255, 'default' => '']);
 				$table->addColumn('description', 'string', ['length' => 255, 'default' => '']);

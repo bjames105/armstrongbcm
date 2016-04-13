@@ -1,13 +1,13 @@
 [
     {
         "name": "pagekit/blog",
-        "version": "0.10.2",
-        "version_normalized": "0.10.2.0",
+        "version": "1.0.0",
+        "version_normalized": "1.0.0.0",
         "dist": {
             "type": "zip",
-            "url": "https://pagekit.com/package/pagekit/blog/0.10.2.zip",
+            "url": "https://pagekit.com/package/pagekit/blog/1.0.0.zip",
             "reference": null,
-            "shasum": "c821944656e7676987a8b809eef918182da9eb9d"
+            "shasum": "68b11036b967ef5fa07e910dfb5d987f4f0cad6d"
         },
         "archive": {
             "exclude": [
@@ -35,18 +35,23 @@
     },
     {
         "name": "pagekit/theme-one",
-        "version": "0.10.1",
-        "version_normalized": "0.10.1.0",
+        "version": "1.0.0",
+        "version_normalized": "1.0.0.0",
         "dist": {
             "type": "zip",
-            "url": "https://pagekit.com/package/pagekit/theme-one/0.10.1.zip",
+            "url": "https://pagekit.com/package/pagekit/theme-one/1.0.0.zip",
             "reference": null,
-            "shasum": "9a0dbf1a79b20869ac28f48e525bab73cefee474"
+            "shasum": "6d49b3cbb1de15b4a3947890e7935b13de76f7f8"
         },
         "archive": {
             "exclude": [
+                "node_modules",
+                "!/app",
                 "!/css",
-                "!/app"
+                "/app/assets",
+                "gulpfile.js",
+                "bower.js",
+                "package.js"
             ]
         },
         "type": "pagekit-theme",
@@ -65,216 +70,5 @@
             }
         ],
         "description": "Pagekit's default theme."
-    },
-    {
-        "name": "google/recaptcha",
-        "version": "1.1.2",
-        "version_normalized": "1.1.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/google/recaptcha.git",
-            "reference": "2b7e00566afca82a38a1d3adb8e42c118006296e"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/google/recaptcha/zipball/2b7e00566afca82a38a1d3adb8e42c118006296e",
-            "reference": "2b7e00566afca82a38a1d3adb8e42c118006296e",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.2"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "4.5.*"
-        },
-        "time": "2015-09-02 17:23:59",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.1.x-dev"
-            }
-        },
-        "installation-source": "source",
-        "autoload": {
-            "psr-4": {
-                "ReCaptcha\\": "src/ReCaptcha"
-            }
-        },
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "description": "Client library for reCAPTCHA, a free service that protect websites from spam and abuse.",
-        "homepage": "http://www.google.com/recaptcha/",
-        "keywords": [
-            "Abuse",
-            "captcha",
-            "recaptcha",
-            "spam"
-        ]
-    },
-    {
-        "name": "lusitanian/oauth",
-        "version": "v0.3.6",
-        "version_normalized": "0.3.6.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/Lusitanian/PHPoAuthLib.git",
-            "reference": "4ce8c488971410233eb3b1e6d9ac4e81debb41d5"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/4ce8c488971410233eb3b1e6d9ac4e81debb41d5",
-            "reference": "4ce8c488971410233eb3b1e6d9ac4e81debb41d5",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "3.7.*",
-            "predis/predis": "0.8.*@dev",
-            "symfony/http-foundation": "~2.1"
-        },
-        "suggest": {
-            "ext-openssl": "Allows for usage of secure connections with the stream-based HTTP client.",
-            "predis/predis": "Allows using the Redis storage backend.",
-            "symfony/http-foundation": "Allows using the Symfony Session storage backend."
-        },
-        "time": "2015-09-09 06:43:02",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "0.1-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "OAuth": "src",
-                "OAuth\\Unit": "tests"
-            }
-        },
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "David Desberg",
-                "email": "david@daviddesberg.com"
-            },
-            {
-                "name": "Pieter Hordijk",
-                "email": "info@pieterhordijk.com"
-            }
-        ],
-        "description": "PHP 5.3+ oAuth 1/2 Library",
-        "keywords": [
-            "Authentication",
-            "authorization",
-            "oauth",
-            "security"
-        ]
-    },
-    {
-        "name": "pagekit/analytics",
-        "version": "0.10.1",
-        "version_normalized": "0.10.1.0",
-        "dist": {
-            "type": "zip",
-            "url": "https://pagekit.com/package/pagekit/analytics/0.10.1.zip",
-            "reference": null,
-            "shasum": "8e62f7044cfcd0d314f12d41ce8fd1353ca05050"
-        },
-        "archive": {
-            "exclude": [
-                "node_modules",
-                "!/app"
-            ]
-        },
-        "require": {
-            "lusitanian/oauth": "~0.3.5"
-        },
-        "type": "pagekit-extension",
-        "extra": {
-            "icon": "icon.svg",
-            "scripts": "scripts.php"
-        },
-        "installation-source": "dist",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Pagekit",
-                "email": "info@pagekit.com",
-                "homepage": "http://pagekit.com"
-            }
-        ],
-        "description": "An analytics extension for your dashboard."
-    },
-    {
-        "name": "bixie/framework",
-        "version": "0.1.3",
-        "version_normalized": "0.1.3.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/Bixie/pagekit-framework.git",
-            "reference": "c04ac4f3c7dcfa95201a0e825f835183a6809efc"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/Bixie/pagekit-framework/zipball/c04ac4f3c7dcfa95201a0e825f835183a6809efc",
-            "reference": "c04ac4f3c7dcfa95201a0e825f835183a6809efc",
-            "shasum": ""
-        },
-        "time": "2016-03-01 14:10:47",
-        "type": "pagekit-extension",
-        "extra": {
-            "icon": "icon.svg"
-        },
-        "installation-source": "dist",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Bixie",
-                "email": "info@bixie.org",
-                "homepage": "http://www.bixie.org"
-            }
-        ],
-        "description": "Framework for Bixie extensions."
-    },
-    {
-        "name": "bixie/formmaker",
-        "version": "1.4.0",
-        "version_normalized": "1.4.0.0",
-        "dist": {
-            "type": "zip",
-            "url": "https://pagekit.com/package/bixie/formmaker/1.4.0.zip",
-            "reference": null,
-            "shasum": ""
-        },
-        "require": {
-            "bixie/framework": "~0.1.3",
-            "google/recaptcha": "~1.1"
-        },
-        "type": "pagekit-extension",
-        "extra": {
-            "icon": "icon.svg",
-            "scripts": "scripts.php"
-        },
-        "installation-source": "dist",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Bixie",
-                "email": "info@bixie.org",
-                "homepage": "http://formmaker.bixie.org"
-            }
-        ],
-        "description": "Create forms in your Pagekit site. Build forms and manage the submissions."
     }
 ]

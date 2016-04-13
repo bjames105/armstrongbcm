@@ -4,7 +4,7 @@ namespace brandonjames\groups\Model;
 
 use \Pagekit\Application as App;
 use \Pagekit\Database\ORM\ModelTrait;
-use \Pagekit\User\Model\User;
+use \Pagekit\User\Model\User as User;
 
 /**
  * @Entity(tableClass="@group")
@@ -42,7 +42,7 @@ class Group implements \JsonSerializable
     /** @Column(type="string") */
     public $active_day;
 
-    /** @Column(type="time") */
+    /** @Column(type="string") */
     public $active_time;
 
     /** @Column(type="string") */
@@ -76,11 +76,12 @@ class Group implements \JsonSerializable
 
         $groupMembers = [];
 
+        // These group members are basically the User class
         if (sizeof($this->group_members) > 0)
         {
             foreach ($this->group_members as $member)
             {
-                $groupMembers[] = $member->user;
+                $groupMembers[] = User::find($member->user_id);
             }
         }
 
@@ -88,4 +89,17 @@ class Group implements \JsonSerializable
 
         return $this->toArray($data);
     }
+
+    public function delete()
+    {
+        $group_members = self::query()->related('group_members')->get();
+
+        foreach ($group_members as $member)
+        {
+            $member->delete();
+        }
+
+        parent::delete();
+    }
+
 }

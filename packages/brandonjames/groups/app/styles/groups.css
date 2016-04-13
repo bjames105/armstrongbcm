@@ -1,0 +1,41 @@
+#group h1, .uk-h1
+{
+    font-size: 100px;
+    line-height: 100px;
+    font-weight: bolder;
+}
+
+#group .editable + .edit-hint,
+#group .editable > .edit-hint
+{
+    visibility: hidden;
+}
+
+#group .editable:hover
+{
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+#group .editable:hover + .edit-hint,
+#group .editable:hover > .edit-hint
+{
+    visibility: visible;
+}
+
+#group .editable > .edit-hint
+{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    padding-right: 4px;
+}
+
+#group #group-members li > img.group-member
+{
+    height: 64px;
+}
+
+#group .group-name > input[type="text"]
+{
+    height: 144px;
+}

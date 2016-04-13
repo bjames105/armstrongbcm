@@ -2,14 +2,14 @@
 
     <div>
 
-        <div class="uk-grid uk-grid-medium uk-grid-match uk-grid-width-small-1-2 uk-grid-width-xlarge-1-3" data-uk-grid-margin id="123">
+        <div class="uk-grid uk-grid-medium uk-grid-match uk-grid-width-small-1-2 uk-grid-width-xlarge-1-3" data-uk-grid-margin="observe:true">
             <div v-for="pkg in packages">
                 <div class="uk-panel uk-panel-box uk-overlay-hover">
 
                     <div class="uk-panel-teaser">
                         <div class="uk-overlay uk-display-block">
-                            <div class="uk-cover-background uk-position-cover" :style="{'background-image': 'url('+pkg.extra.image+')'}"></div>
-                            <canvas class="uk-responsive-width uk-display-block" width="800" height="550"></canvas>
+                            <div class="uk-cover-background uk-position-cover" :style="{ 'background-image': 'url(' + pkg.extra.image + ')' }"></div>
+                            <canvas class="uk-responsive-width uk-display-block" width="1200" height="800"></canvas>
                             <div class="uk-overlay-panel uk-overlay-background pk-overlay-background uk-overlay-fade"></div>
                         </div>
                     </div>
@@ -36,22 +36,25 @@
                 <div class="uk-modal-header">
                     <h2 class="uk-margin-small-bottom">{{ pkg.title }}</h2>
                     <ul class="uk-subnav uk-subnav-line uk-margin-bottom-remove">
-                        <li class="uk-text-muted">{{ pkg.author.name }}</li>
+                        <li v-if="pkg.author.homepage"><a class="uk-link-muted" :href="pkg.author.homepage" target="_blank">{{ pkg.author.name }}</a></li>
+                        <li class="uk-text-muted" v-else>{{ pkg.author.name }}</li>
                         <li class="uk-text-muted">{{ 'Version %version%' | trans {version:pkg.version} }}</li>
+                        <li class="uk-text-muted" v-if="pkg.license">{{ pkg.license }}</li>
                     </ul>
                 </div>
 
                 <div class="uk-grid">
                     <div class="uk-width-medium-1-2">
-                        <img width="800" height="600" :alt="pkg.title" :src="pkg.extra.image">
+                        <img width="1200" height="800" :alt="pkg.title" :src="pkg.extra.image">
                     </div>
                     <div class="uk-width-medium-1-2">
+
                         <div v-html="pkg.description | marked" v-if="pkg.description"></div>
 
-                        <ul class="uk-list">
-                            <li v-if="pkg.license"><strong>{{ 'License:' | trans }}</strong> {{ pkg.license }}</li>
-                            <li v-if="pkg.author.homepage"><strong>{{ 'Homepage:' | trans }}</strong> <a :href="pkg.author.homepage" target="_blank">{{ pkg.author.homepage }}</a></li>
-                            <li v-if="pkg.author.email"><strong>{{ 'Email:' | trans }}</strong> <a href="mailto:{{ pkg.author.email }}">{{ pkg.author.email }}</a></li>
+                        <ul class="uk-grid uk-grid-small" data-uk-grid-margin>
+                            <li v-if="pkg.demo"><a class="uk-button" :href="pkg.demo" target="_blank">{{ 'Demo' | trans }}</a></li>
+                            <li v-if="pkg.support"><a class="uk-button" :href="pkg.support" target="_blank">{{ 'Support' | trans }}</a></li>
+                            <li v-if="pkg.documentation"><a class="uk-button" :href="pkg.documentation" target="_blank">{{ 'Documentation' | trans }}</a></li>
                         </ul>
 
                     </div>

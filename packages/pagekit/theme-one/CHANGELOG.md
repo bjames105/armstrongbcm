@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.0.0 (April 13, 2016)
+
+### Changed
+- Changed article divider
+
+## 0.11.1 (April 7, 2016)
+
+### Added
+- Added page title fallback if no logo is picked
+
+### Changed
+- Made the logo height responsive
+
+## 0.11.0 (February 24, 2016)
+
+### Changed
+- Use view.init event for theme params
+
+### Removed
+- Removed system messages
+
 ## 0.10.1 (February 24, 2016)
 
 ### Added
