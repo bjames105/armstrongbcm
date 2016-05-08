@@ -1,7 +1,7 @@
 <?php return array (
   'application' => 
   array (
-    'debug' => false,
+    'debug' => true,
   ),
   'database' => 
   array (
@@ -21,5 +21,24 @@
   'system' => 
   array (
     'secret' => 'MQf6nzPPhj22hsgca/pYP8Z6qcPaKgvw48rGnuIqf1Sfp4O4uToYzi1VXzp1HiD1',
+  ),
+  'system/cache' => 
+  array (
+    'caches' => 
+    array (
+      'cache' => 
+      array (
+        'storage' => 'auto',
+      ),
+    ),
+    'nocache' => true,
+  ),
+  'system/finder' => 
+  array (
+    'storage' => '',
+  ),
+  'debug' => 
+  array (
+    'enabled' => true,
   ),
 );

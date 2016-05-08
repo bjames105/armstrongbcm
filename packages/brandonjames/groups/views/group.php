@@ -4,7 +4,7 @@
 <?php $view->style('groups', 'groups:app/styles/groups.css', [ 'uikit-notify' ]); ?>
 <div id="group" class="uk-grid">
 	<div class="uk-position-top uk-padding-remove uk-height-1-1 uk-width-1-1">
-		<div class="uk-cover-background uk-width-1-1 uk-height-1-1 uk-padding-remove" style="background-image: url('/storage/home-hero.jpg');">
+		<div class="uk-cover-background uk-width-1-1 uk-height-1-1 uk-padding-remove">
 			<div class="uk-height-1-1" style="background-color: rgba(255, 255, 255, 0.9)"></div>
 		</div>
 	</div>
@@ -99,10 +99,8 @@
 					<div class="uk-text-bold"><a href="#group-members" data-uk-modal>{{ '{0} Members|{1} One Member|]1,Inf[ %count% Members' | transChoice group.group_members.length {count:group.group_members.length} }}</a></div>
 				</div>
 				<div class="uk-width-large-1-5 uk-width-small-1-1">
-					<div>
-						<button v-show="userCanLeaveGroup()" type="button" class="uk-button uk-button-danger" @click="leave()"><i class="uk-icon-user-times uk-margin-small-bottom"></i> Leave</button>
-						<button v-show="userCanJoinGroup()" type="button" class="uk-button uk-button-primary" @click="join()"><i class="uk-icon-user-plus uk-margin-small-bottom"></i> Join</button>
-					</div>
+					<button v-show="userCanLeaveGroup()" type="button" class="uk-button uk-button-danger" @click="leave()"><i class="uk-icon-user-times uk-margin-small-bottom"></i> Leave</button>
+					<button v-show="userCanJoinGroup()" type="button" class="uk-button uk-button-primary" @click="join()"><i class="uk-icon-user-plus uk-margin-small-bottom"></i> Join</button>
 					<div>Created</div>
 					<div class="uk-text-bold">{{ group.created | date }}</div>
 				</div>
@@ -111,9 +109,15 @@
 				<h2>Description</h2>
 				<p>{{ (group.description == null) ? "This group has no description." : group.description }}</p>
 			</div><?php endif; ?>
-			<div id="discussions">
+			<div id="discussions" class="uk-width-1-1">
 				<h2>Discussion</h2>
-
+				<form class="uk-form">
+					<textarea v-model="newDiscussionPost.content" class="uk-width-1-1 uk-margin-small-bottom" placeholder="What do you want to talk about?" style="resize: vertical; min-height: 100px"></textarea>
+					<button type="button" class="uk-button uk-button-primary"><i class="uk-icon-plus"></i> Make Discussion Post</button>
+				</form>
+				<ul class="uk-list uk-list-line">
+					<li></li>
+				</ul>
 			</div>
 		</div>
 		<div id="group-members" class="uk-modal">
@@ -143,7 +147,7 @@
 				<div class="uk-width-1-1 uk-margin-top">
 					<p>This action <em>cannot</em> be reversed</p>
 					<button class="uk-modal-close uk-button">Cancel</button>
-					<button @click="delete()" class="uk-button uk-button-danger">Yes, delete {{ group.name }}</button>
+					<button @click="remove()" class="uk-button uk-button-danger">Yes, delete {{ group.name }}</button>
 				</div>
 			</div>
 		</div><?php endif; ?>

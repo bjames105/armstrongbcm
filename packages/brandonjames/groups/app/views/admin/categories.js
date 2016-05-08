@@ -3,47 +3,62 @@ module.exports = {
 	el: '#categories',
 
 	ready: function () {
-		this.resource = this.$resource('api/groups/categories{/id}');
+		this.resource = this.$resource('api/group_categories{/id}');
 	},
 
 	data: {
 		categories: window.$data.categories,
 		searchText: '',
-		newCategory: { }
+		newCategory: { },
+		categoryToDelete: { name: '' }
 	},
 
 	methods: {
-		add: function (e) {
-			e.preventDefault();
+		add: function ()
+		{
+			if (!this.newCategory) return;
 
-			if (!this.newGroup) return;
-
-			this.resource.save({ newCategory: this.newCategory }).then(function (data) {
-				var response = data.data;
-				this.groups.push(response.categorie);
+			this.resource.save({ new_category: this.newCategory }).then(function (resp)
+			{
+				var response = resp.data;
+				this.categories.push(response.category);
 				UIkit.notify(response.message, '');
-			}, function (error) {
+			},
+			function (error)
+			{
 				UIkit.notify(error.data.message, 'danger');
 			});
-			this.newGroup = { };
+			this.newCategory = { };
 		},
-
 		remove: function (entry) {
-			this.resource.delete({ id: entry.id }).then(function (data) {
+			this.resource.delete({ id: entry.id }).then(function (resp)
+			{
+				var message = resp.data.message;
 				this.categories.$remove(entry);
-				UIkit.notify(data.message, '');
-			}, function (error) {
-				UIkit.notify(error.data, 'danger');
+				this.categoryToDelete = { name: '' };
+				UIkit.notify(message, '');
+			},
+			function (error)
+			{
+				this.$notify(error.data.message, 'danger');
+			});
+		},
+		update: function (entry)
+		{
+			this.resource.update({ id: entry.id }, { group_category: entry })
+			.then(function (response)
+			{
+				this.$notify("<i class='uk-icon-check'></i> " + response.data.message);
+			},
+			function (error)
+			{
+				this.$notify(error.data.message, 'danger');
 			});
 		},
 
-		save: function (entry) {
-			this.resource.update({ category: entry }).then(function (data) {
-				this.categories.$remove(entry);
-				UIkit.notify(data.message, '');
-			}, function (error) {
-				UIkit.notify(error.data, 'danger');
-			});
+		setCategoryToDelete: function(category)
+		{
+			this.categoryToDelete = category;
 		}
 	}
 };

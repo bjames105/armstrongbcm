@@ -87,15 +87,6 @@
 				});
 			},
 
-			save: function (entry) {
-				this.resource.update({ group: entry }).then(function (data) {
-					this.groups.$remove(entry);
-					UIkit.notify(data.message, '');
-				}, function (error) {
-					UIkit.notify(error.data, 'danger');
-				});
-			},
-
 			setGroupToDelete: function(group)
 			{
 				this.groupToDelete = group;

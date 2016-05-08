@@ -50,11 +50,11 @@ module.exports = {
 				this.$notify(error.data.message, 'danger');
 			});
 		},
-		delete: function () {
+		remove: function () {
 			this.resource.delete({ id: this.group.id })
 			.then(function (response)
 			{
-				// window.location.href = "/index.php/groups";
+				window.location.href = "/index.php/groups";
 			},
 			function (error)
 			{
@@ -135,6 +135,16 @@ module.exports = {
 					this.$data.group.active_day = thisWeekday;
 				}
 			}
+		},
+		upload: function (e)
+		{
+			e.preventDefault();
+
+			$('#upload').click();
+		},
+		setGroupGender: function (gender)
+		{
+			this.group.gender = gender;
 		}
 	}
 }

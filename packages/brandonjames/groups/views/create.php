@@ -4,7 +4,7 @@
 <?php $view->style('groups', 'groups:app/styles/groups.css', [ 'uikit-notify' ]); ?>
 <div id="group" class="uk-grid">
 	<div class="uk-position-top uk-padding-remove uk-height-1-1 uk-width-1-1">
-		<div class="uk-cover-background uk-width-1-1 uk-height-1-1 uk-padding-remove" style="background-image: url('/storage/home-hero.jpg');">
+		<div class="uk-cover-background uk-width-1-1 uk-height-1-1 uk-padding-remove">
 			<div class="uk-height-1-1" style="background-color: rgba(255, 255, 255, 0.9)"></div>
 		</div>
 	</div>
@@ -52,7 +52,7 @@
 			<div class="uk-width-large-1-5 uk-width-small-1-4">
 				<i class="uk-icon-users uk-icon-large uk-display-block uk-margin-small-bottom"></i>
 				<div>Members</div>
-				<div class="uk-text-bold"><a href="#group-members" data-uk-modal>{{ group.group_members.length + ' Members' }}</a></div>
+				<div class="uk-text-bold"><a href="#group-members" data-uk-modal data-uk-tooltip title="Pick max member count and member gender">{{ group.group_members.length + ' Members' }}</a></div>
 			</div>
 			<div class="uk-width-large-1-5 uk-width-small-1-1">
 				<div>
@@ -61,6 +61,10 @@
 						<option v-for="category in groupCategories" value="{{ category.id }}">{{ category.name }}</option>
 					</select>
 				</div>
+			</div>
+			<div class="uk-form-file uk-width-1-1 uk-text-left uk-margin-top">
+			    <button @click="upload" class="uk-button uk-button-primary" type="button"><i class="uk-icon-upload"></i> Choose a background image</button>
+			    <input type="file" id="upload" style="display: none;"/>
 			</div>
 		</form>
 		<form class="uk-form uk-width-1-1 uk-margin-bottom">
@@ -75,6 +79,26 @@
                 <button @click="create()" class="uk-button uk-button-primary" type="button"><i class="uk-icon-plus"></i> Create Group</button>
             </p>
 		</form>
+		<div id="group-members" class="uk-modal">
+		    <div class="uk-modal-dialog">
+				<a class="uk-modal-close uk-close"></a>
+				<div class="uk-modal-header">Choose Member Gender and Maximum Size</div>
+				<form class="uk-form uk-form-horizontal" data-uk-margin>
+					<div class="uk-form-row">
+				        <label class="uk-form-label" for="max-members">Maximum Group size</label>
+				        <div class="uk-form-controls"><input type="number" id="max-members" v-model="group.max_members"/></div>
+						<label class="uk-form-label">Group Gender</label>
+						<div class="uk-form-controls">
+							<div data-uk-button-radio>
+							    <button type="button" class="uk-button" @click="setGroupGender('c')">Co-ed</button>
+							    <button type="button" class="uk-button" @click="setGroupGender('m')">Guys</button>
+							    <button type="button" class="uk-button"  click="setGroupGender('f')">Girls</button>
+							</div>
+						</div>
+				    </div>
+				</form>
+		    </div>
+		</div>
 		<div id="weekday" class="uk-modal">
 		    <div class="uk-modal-dialog">
 				<a href="javascript:;" class="uk-modal-close uk-close"></a>

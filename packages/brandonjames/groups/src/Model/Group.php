@@ -90,16 +90,4 @@ class Group implements \JsonSerializable
         return $this->toArray($data);
     }
 
-    public function delete()
-    {
-        $group_members = self::query()->related('group_members')->get();
-
-        foreach ($group_members as $member)
-        {
-            $member->delete();
-        }
-
-        parent::delete();
-    }
-
 }

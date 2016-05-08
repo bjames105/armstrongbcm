@@ -8,14 +8,12 @@ return [
 
 	'main' => 'Bixie\\Framework\\FrameworkModule',
 
-	'autoload' => [
-
-		'Bixie\\Framework\\' => 'src'
-
-	],
-
 	'fieldtypes' => 'fieldtypes',
 
+	'autoload' => [
+		'Bixie\\Framework\\' => 'src'
+	],
+	
 	'resources' => [
 
 		'bixie/framework:' => ''

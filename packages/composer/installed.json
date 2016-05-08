@@ -70,5 +70,121 @@
             }
         ],
         "description": "Pagekit's default theme."
+    },
+    {
+        "name": "google/recaptcha",
+        "version": "1.1.2",
+        "version_normalized": "1.1.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/google/recaptcha.git",
+            "reference": "2b7e00566afca82a38a1d3adb8e42c118006296e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/google/recaptcha/zipball/2b7e00566afca82a38a1d3adb8e42c118006296e",
+            "reference": "2b7e00566afca82a38a1d3adb8e42c118006296e",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "4.5.*"
+        },
+        "time": "2015-09-02 17:23:59",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.1.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "ReCaptcha\\": "src/ReCaptcha"
+            }
+        },
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "Client library for reCAPTCHA, a free service that protect websites from spam and abuse.",
+        "homepage": "http://www.google.com/recaptcha/",
+        "keywords": [
+            "Abuse",
+            "captcha",
+            "recaptcha",
+            "spam"
+        ]
+    },
+    {
+        "name": "bixie/framework",
+        "version": "0.1.5",
+        "version_normalized": "0.1.5.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Bixie/pagekit-framework.git",
+            "reference": "e36573e7e7f26f0bb4843cd90d3bb98c73f4722d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Bixie/pagekit-framework/zipball/e36573e7e7f26f0bb4843cd90d3bb98c73f4722d",
+            "reference": "e36573e7e7f26f0bb4843cd90d3bb98c73f4722d",
+            "shasum": ""
+        },
+        "time": "2016-04-18 15:11:13",
+        "type": "pagekit-extension",
+        "extra": {
+            "icon": "icon.svg"
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Bixie\\Framework\\": "src"
+            }
+        },
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Bixie",
+                "email": "info@bixie.org",
+                "homepage": "http://www.bixie.org"
+            }
+        ],
+        "description": "Framework for Bixie extensions."
+    },
+    {
+        "name": "bixie/formmaker",
+        "version": "1.4.1",
+        "version_normalized": "1.4.1.0",
+        "dist": {
+            "type": "zip",
+            "url": "https://pagekit.com/package/bixie/formmaker/1.4.1.zip",
+            "reference": null,
+            "shasum": "2603271e2c55f8776a460bf10995a682c2bec45f"
+        },
+        "require": {
+            "bixie/framework": "^0.1",
+            "google/recaptcha": "~1.1"
+        },
+        "type": "pagekit-extension",
+        "extra": {
+            "icon": "icon.svg",
+            "scripts": "scripts.php"
+        },
+        "installation-source": "dist",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Bixie",
+                "email": "info@bixie.org",
+                "homepage": "http://formmaker.bixie.org"
+            }
+        ],
+        "description": "Create forms in your Pagekit site. Build forms and manage the submissions."
     }
 ]

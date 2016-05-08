@@ -36,4 +36,9 @@ class GroupCategory implements \JsonSerializable
 
     /** @Column(type="datetime") */
     public $modified;
+
+    /**
+     * @HasMany(targetEntity="\brandonjames\groups\Model\Group", keyFrom="id", keyTo="group_category_id")
+     */
+    public $groups;
 }

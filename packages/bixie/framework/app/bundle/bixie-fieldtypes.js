@@ -47,10 +47,16 @@ var BixieFieldtypes =
 
 	var __vue_script__, __vue_template__
 	__vue_script__ = __webpack_require__(1)
+	if (__vue_script__ &&
+	    __vue_script__.__esModule &&
+	    Object.keys(__vue_script__).length > 1) {
+	  console.warn("[vue-loader] packages\\bixie\\framework\\app\\fieldtypes.vue: named exports in *.vue files are ignored.")}
 	__vue_template__ = __webpack_require__(3)
 	module.exports = __vue_script__ || {}
 	if (module.exports.__esModule) module.exports = module.exports.default
-	if (__vue_template__) { (typeof module.exports === "function" ? module.exports.options : module.exports).template = __vue_template__ }
+	if (__vue_template__) {
+	(typeof module.exports === "function" ? (module.exports.options || (module.exports.options = {})) : module.exports).template = __vue_template__
+	}
 	if (false) {(function () {  module.hot.accept()
 	  var hotAPI = require("vue-hot-reload-api")
 	  hotAPI.install(require("vue"), true)
@@ -68,21 +74,6 @@ var BixieFieldtypes =
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-
-	// <template>
-	//
-	//     <div>
-	//         <component v-for="field in fields | orderBy 'priority'"
-	//                    :is="field.type"
-	//                    :field="field"
-	//                    :model="model"
-	//                    :is-admin="isAdmin"
-	//                    :form="form"></component>
-	//     </div>
-	//
-	// </template>
-	//
-	// <script>
 
 	window.BixieFieldtypeMixin = __webpack_require__(2);
 	window.BixieFieldtypes = module.exports = {
@@ -113,10 +104,6 @@ var BixieFieldtypes =
 	Vue.component('fieldtypes', function (resolve) {
 	    resolve(module.exports);
 	});
-
-	// </script>
-	//
-	//
 
 /***/ },
 /* 2 */
@@ -193,8 +180,11 @@ var BixieFieldtypes =
 	        fieldRequired: function () {
 	            return this.field.data.required && !this.isAdmin ? true : false;
 	        },
+	        fieldRequiredMessage: function () {
+	            return this.field.data.requiredError || this.$trans('Please enter a value');
+	        },
 	        fieldLabel: function () {
-	            return this.isAdmin ? 'Default value' : this.field.label;
+	            return this.isAdmin ? this.$trans('Default value') : this.field.label;
 	        }
 	    },
 
@@ -210,7 +200,7 @@ var BixieFieldtypes =
 /* 3 */
 /***/ function(module, exports) {
 
-	module.exports = "\n\n    <div>\n        <component v-for=\"field in fields | orderBy 'priority'\"\n                   :is=\"field.type\"\n                   :field=\"field\"\n                   :model=\"model\"\n                   :is-admin=\"isAdmin\"\n                   :form=\"form\"></component>\n    </div>\n\n";
+	module.exports = "\n\n<div>\n    <component v-for=\"field in fields | orderBy 'priority'\"\n               :is=\"field.type\"\n               :field=\"field\"\n               :model=\"model\"\n               :is-admin=\"isAdmin\"\n               :form=\"form\"></component>\n</div>\n\n";
 
 /***/ }
 /******/ ]);

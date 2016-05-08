@@ -68,6 +68,12 @@ return [
             'controller' => [
                 'brandonjames\\groups\\Controller\\GroupsApiController',
             ]
+        ],
+        '/api/group_categories' => [
+            'name' => '@group_categories/api',
+            'controller' => [
+                'brandonjames\\groups\\Controller\\GroupCategoriesApiController',
+            ]
         ]
 
     ],

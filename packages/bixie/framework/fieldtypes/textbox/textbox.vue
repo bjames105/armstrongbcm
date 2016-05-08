@@ -26,8 +26,7 @@
             <p v-if="field.data.help_text && field.data.help_show == 'block'"
                class="uk-form-help-block">{{{field.data.help_text}}}</p>
 
-            <p class="uk-form-help-block uk-text-danger" v-show="fieldInvalid(form)">{{ field.data.requiredError ||
-                'Please enter a value' | trans }}</p>
+            <p class="uk-form-help-block uk-text-danger" v-show="fieldInvalid(form)">{{ fieldRequiredMessage }}</p>
         </div>
     </div>
 
@@ -81,10 +80,10 @@
 
         computed: {
             minLength: function () {
-                return this.field.data.minLength && !this.isAdmin ? this.field.data.minLength : false;
+                return this.field.data.minLength ? this.field.data.minLength : false;
             },
             maxLength: function () {
-                return this.field.data.maxLength && !this.isAdmin ? this.field.data.maxLength : false;
+                return this.field.data.maxLength ? this.field.data.maxLength : false;
             }
         }
 

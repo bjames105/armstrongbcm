@@ -112,9 +112,12 @@ class SiteController
 		{
 			$group_categories[] = $groupCategory;
 		}
+
 		$group = [
-			'active_day' => 'S',
+			'active_day' => 'M',
 			'active_time' => '12:00',
+			'gender' => 'c',
+			'max_members' => 0,
 			'user' => $current_user,
 			'group_members' => []
 		];

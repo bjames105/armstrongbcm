@@ -46,10 +46,16 @@
 
 	var __vue_script__, __vue_template__
 	__vue_script__ = __webpack_require__(7)
+	if (__vue_script__ &&
+	    __vue_script__.__esModule &&
+	    Object.keys(__vue_script__).length > 1) {
+	  console.warn("[vue-loader] packages\\bixie\\framework\\fieldtypes\\htmlcode\\htmlcode.vue: named exports in *.vue files are ignored.")}
 	__vue_template__ = __webpack_require__(11)
 	module.exports = __vue_script__ || {}
 	if (module.exports.__esModule) module.exports = module.exports.default
-	if (__vue_template__) { (typeof module.exports === "function" ? module.exports.options : module.exports).template = __vue_template__ }
+	if (__vue_template__) {
+	(typeof module.exports === "function" ? (module.exports.options || (module.exports.options = {})) : module.exports).template = __vue_template__
+	}
 	if (false) {(function () {  module.hot.accept()
 	  var hotAPI = require("vue-hot-reload-api")
 	  hotAPI.install(require("vue"), true)
@@ -74,18 +80,6 @@
 
 	'use strict';
 
-	// <template>
-	//
-	//     <div :class="classes(['uk-form-row', (isAdmin ? 'uk-hidden' : '')], field.data.classSfx)">
-	//
-	//         {{{ fieldValue.formatted[0] }}}
-	//
-	//     </div>
-	//
-	// </template>
-	//
-	// <script>
-
 	module.exports = {
 
 	    mixins: [BixieFieldtypeMixin],
@@ -104,19 +98,22 @@
 
 	window.BixieFieldtypes.components['htmlcode'] = module.exports;
 
-	// </script>
-	//
-
 /***/ },
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __vue_script__, __vue_template__
 	__vue_script__ = __webpack_require__(9)
+	if (__vue_script__ &&
+	    __vue_script__.__esModule &&
+	    Object.keys(__vue_script__).length > 1) {
+	  console.warn("[vue-loader] packages\\bixie\\framework\\fieldtypes\\htmlcode\\components\\settings.vue: named exports in *.vue files are ignored.")}
 	__vue_template__ = __webpack_require__(10)
 	module.exports = __vue_script__ || {}
 	if (module.exports.__esModule) module.exports = module.exports.default
-	if (__vue_template__) { (typeof module.exports === "function" ? module.exports.options : module.exports).template = __vue_template__ }
+	if (__vue_template__) {
+	(typeof module.exports === "function" ? (module.exports.options || (module.exports.options = {})) : module.exports).template = __vue_template__
+	}
 	if (false) {(function () {  module.hot.accept()
 	  var hotAPI = require("vue-hot-reload-api")
 	  hotAPI.install(require("vue"), true)
@@ -135,21 +132,6 @@
 
 	'use strict';
 
-	// <template>
-	//
-	//     <div class="uk-form-row">
-	//
-	//         <v-editor :value.sync="field.data.value" :options="{markdown : field.data.markdown}"></v-editor>
-	//         <p>
-	//             <label><input type="checkbox" v-model="field.data.markdown"> {{ 'Enable Markdown' | trans }}</label>
-	//         </p>
-	//
-	//     </div>
-	//
-	// </template>
-	//
-	// <script>
-
 	module.exports = {
 
 	    created: function created() {
@@ -160,20 +142,17 @@
 
 	};
 
-	// </script>
-	//
-
 /***/ },
 /* 10 */
 /***/ function(module, exports) {
 
-	module.exports = "\r\n\r\n    <div class=\"uk-form-row\">\r\n\r\n        <v-editor :value.sync=\"field.data.value\" :options=\"{markdown : field.data.markdown}\"></v-editor>\r\n        <p>\r\n            <label><input type=\"checkbox\" v-model=\"field.data.markdown\"> {{ 'Enable Markdown' | trans }}</label>\r\n        </p>\r\n\r\n    </div>\r\n\r\n";
+	module.exports = "\n\n<div class=\"uk-form-row\">\n\n    <v-editor :value.sync=\"field.data.value\" :options=\"{markdown : field.data.markdown}\"></v-editor>\n    <p>\n        <label><input type=\"checkbox\" v-model=\"field.data.markdown\"> {{ 'Enable Markdown' | trans }}</label>\n    </p>\n\n</div>\n\n";
 
 /***/ },
 /* 11 */
 /***/ function(module, exports) {
 
-	module.exports = "\n\n    <div :class=\"classes(['uk-form-row', (isAdmin ? 'uk-hidden' : '')], field.data.classSfx)\">\n\n        {{{ fieldValue.formatted[0] }}}\n\n    </div>\n\n";
+	module.exports = "\n\n<div :class=\"classes(['uk-form-row', (isAdmin ? 'uk-hidden' : '')], field.data.classSfx)\">\n\n    {{{ fieldValue.formatted[0] }}}\n\n</div>\n\n";
 
 /***/ }
 /******/ ]);

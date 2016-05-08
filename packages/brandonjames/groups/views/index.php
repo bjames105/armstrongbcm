@@ -27,19 +27,24 @@
 			</div>
 		</div> -->
     </div>
-	<div class="uk-grid uk-grid-medium uk-grid-match">
-		<div class="uk-width-large-1-3 uk-width-medium-1-2 uk-width-small-1-1 uk-margin-bottom" v-for="group in groups | filterBy searchText in fields | orderBy 'name'">
-			<div class="uk-panel uk-panel-box">
-				<div class="uk-panel-teaser">
-					<a href="{{ '<?= $view->url('@groups'); ?>/' + group.id }}"><div class="uk-overlay-panel"><h3>{{ group.name }}</h3></div></a>
-			        <img src="/storage/placeholder_600x400.svg">
-			    </div>
-				<ul class="uk-list uk-list-space">
-					<li>Led by <strong>{{ group.user.name }}</strong></li>
-					<li><i class="uk-icon-users"></i> {{ group.group_members.length }} members</li>
-					<li>Meets on {{ weekdays[group.active_day] }}s at {{ group.active_time | time }}</li>
-				</ul>
+    <div class="uk-margin-top" v-for="category in categories | filterBy searchText in 'name'" v-if="groupsMapByCategory[category.id].length > 0">
+        <h3>{{ category.name }}</h3>
+        <p>{{ category.description }}</p>
+		<div class="uk-width-1-1 uk-grid uk-grid-medium uk-grid-match">
+			<div class="uk-width-large-1-3 uk-width-medium-1-2 uk-width-small-1-1 uk-margin-bottom"
+				v-for="group in groupsMapByCategory[category.id] | filterBy searchText in fields | orderBy 'name'">
+				<div class="uk-panel uk-panel-box">
+					<div class="uk-panel-teaser">
+						<a href="{{ '<?= $view->url('@groups'); ?>/' + group.id }}"><div class="uk-overlay-panel"><h3>{{ group.name }}</h3></div></a>
+				        <img src="/storage/placeholder_600x400.svg">
+				    </div>
+					<ul class="uk-list uk-list-space">
+						<li>Led by <strong>{{ group.user.name }}</strong></li>
+						<li><i class="uk-icon-users"></i> {{ '{0} Members|{1} One Member|]1,Inf[ %count% Members' | transChoice group.group_members.length {count:group.group_members.length} }}</li>
+						<li>Meets on {{ weekdays[group.active_day] }}s at {{ group.active_time | time }}</li>
+					</ul>
+				</div>
 			</div>
 		</div>
-	</div>
+    </div>
 </div>

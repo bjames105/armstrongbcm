@@ -4,11 +4,54 @@ module.exports = {
 
 	ready: function () {
 		this.resource = this.$resource('api/groups{/id}');
+
+		var groupsMap = {};
+		var groupsMapByCategory = {};
+		var groupCategoriesMap = {};
+
+		this.groupsMap = groupsMap;
+		this.groupsMapByCategory = groupsMapByCategory;
+		this.groupCategoriesMap = groupCategoriesMap;
+
+		var mapGroup = function (group)
+		{
+			if (typeof groupsMap[group.id] == 'undefined')
+			{
+				groupsMap[group.id] = [];
+			}
+			if (typeof groupsMapByCategory[group.group_category_id] == 'undefined')
+			{
+				groupsMapByCategory[group.group_category_id] = [];
+			}
+
+			groupsMap[group.id].push(group);
+			groupsMapByCategory[group.group_category_id].push(group);
+		}
+
+		var mapGroupCategory = function (category)
+		{
+			groupCategoriesMap[category.id] = category;
+		}
+
+		for (var i = 0; i < this.groups.length; i++)
+		{
+			mapGroup(this.groups[i]);
+		}
+
+		for (var i = 0; i < this.categories.length; i++)
+		{
+			mapGroupCategory(this.categories[i]);
+		}
+
 	},
 
 	data: {
 		groups: window.$data.groups,
+		categories: window.$data.group_categories,
 		displayMessage: window.$data.displayMessage,
+		groupsMap: {},
+		groupsMapByCategory: {},
+		groupCategoriesMap: {},
 		searchText: '',
 		fields: [ 'name', 'user.name' ],
 		weekdays: {
@@ -27,8 +70,6 @@ module.exports = {
 		add: function (e) {
 			e.preventDefault();
 
-			if (!this.newGroup) return;
-
 			this.resource.save({ new_group: this.newGroup }).then(function (data) {
 				var response = data.data;
 				this.groups.push(response.group);
@@ -42,6 +83,8 @@ module.exports = {
 		remove: function (entry) {
 			this.resource.delete({ id: entry.id }).then(function (data) {
 				this.groups.$remove(entry);
+				delete this.groupsMap[entry.id];
+				delete this.groupsMapByCategory[group.category_id];
 				UIkit.notify(data.message, '');
 			}, function (error) {
 				UIkit.notify(error.data, 'danger');
