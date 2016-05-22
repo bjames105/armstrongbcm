@@ -1,8 +1,8 @@
 {
-	"name" : "brandonjames/groups",
-	"version" : "0.2",
+	"name" : "brandonjames/events",
+	"version" : "0.1",
 	"type" : "pagekit-extension",
-	"title" : "Groups",
+	"title" : "Events",
 	"license": "MIT",
 	"authors": [
 		{
