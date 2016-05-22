@@ -34,7 +34,7 @@
             <a href="<?= $view->url('@groups'); ?>/{{group.id}}" target="_blank">{{ group.name }}</a>
         </div>
         <div class="uk-width-1-4">
-            {{ group.group_members.length }} Members
+            {{ group.group_members.length + ' Members' }}
         </div>
         <div class="uk-width-1-4">
             {{ group.user.name }}
@@ -49,11 +49,11 @@
                         <dt>Category name</dt>
                         <dd>{{ group.group_category.name }}</dd>
                         <dt>Created on</dt>
-                        <dd>{{ group.created }}</dd>
+                        <dd>{{ group.created | date }}</dd>
                         <dt>Gender</dt>
-                        <dd>{{ group.gender }}</dd>
+                        <dd>{{ genders[group.gender] }}</dd>
                         <dt>Day of Week</dt>
-                        <dd>{{ group.active_day }}</dd>
+                        <dd>{{ weekdays[group.active_day] }}</dd>
                         <dt>Members</dt>
                         <dd v-for="member in group.group_members">
                             {{ member.name }}

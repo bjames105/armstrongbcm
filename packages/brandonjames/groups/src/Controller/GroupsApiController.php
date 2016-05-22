@@ -5,6 +5,7 @@ namespace brandonjames\groups\Controller;
 use \Pagekit\Application as App;
 use \Pagekit\User\Model\User;
 use brandonjames\groups\Model\Group as Group;
+use brandonjames\groups\Model\GroupDiscussion as GroupDiscussion;
 use brandonjames\groups\Model\GroupMember as GroupMember;
 
 /**
@@ -31,10 +32,10 @@ class GroupsApiController
      */
 	public function getAction()
 	{
-		$groupData = Group::findAll();
+		$group_data = Group::findAll();
 		$groups = [];
 
-		foreach ($groupData as $group)
+		foreach ($group_data as $group)
 		{
 			$groups[] = $group;
 		}
@@ -42,6 +43,29 @@ class GroupsApiController
 		return [
 			'message' => 'Found ' . sizeof($groups) . ' groups',
 			'groups' => $groups
+		];
+	}
+
+	// Settings stuff
+
+	/**
+	 * @Route("/update_settings")
+	 * @Method({"GET", "PUT"})
+	 * @Request({"config":"array"}, csrf=true)
+ 	 * @Access("groups: manage all groups")
+	 */
+	public function updateSettingsAction($config)
+	{
+		// Before production I need to make sure that no array values are
+		// inserted that aren't in the base config.
+
+		foreach ($config as $key => $value)
+		{
+			App::config('groups')->set($key, $value);
+		}
+
+		return [
+			'message' => 'The Group application\'s configuration was updated.'
 		];
 	}
 
@@ -122,14 +146,15 @@ class GroupsApiController
 				$new_group['gender'] = (!isset($new_group['gender'])) ? 'c' : $new_group['gender'];
 				$new_group['slug'] = urlencode($new_group['name']);
 				$new_group['user_id'] = App::user()->id;
-				$new_group['created'] = date("Y-m-d H:i:s");
-				$new_group['modified'] = date("Y-m-d H:i:s");
+				$new_group['created'] = new \DateTime();
+				$new_group['modified'] = new \DateTime();
 				$group->save($new_group);
 
-				$groupMember = new GroupMember();
-				$groupMember->user_id = App::user()->id;
-				$groupMember->group_id = $group->id;
-				$groupMember->save();
+				$group_member = new GroupMember();
+				$group_member->user_id = App::user()->id;
+				$group_member->group_id = $group->id;
+				$group_member->created = new \DateTime();
+				$group_member->save();
 
 				return [
 					'message' => $group->name . ' was created.',
@@ -151,12 +176,10 @@ class GroupsApiController
 	 */
 	public function saveAction($group, $id)
 	{
-		$groupData = $group;
+		$group_data = $group;
 		$group = Group::find($id);
 
-		$groupName = $group->name;
-
-		if (isset($groupName))
+		if (isset($group->name))
 		{
 			if (App::user()->hasAccess('groups: manage own groups'))
 			{
@@ -170,14 +193,14 @@ class GroupsApiController
 					|| $group->user_id = App::user()->id)
 				{
 
-					$group->save($groupData);
+					$group->save($group_data);
 
 					return [
-						'message' => $groupName . ' was updated.'
+						'message' => $group->name . ' was updated.'
 					];
 				}
 
-				App::abort(403, __($groupName . ' does not belong to you. You may not update it.'));
+				App::abort(403, __($group->name . ' does not belong to you. You may not update it.'));
 
 			}
 
@@ -206,11 +229,11 @@ class GroupsApiController
 					|| $group->max_members == 0
 					|| App::user()->hasPermission('groups: manage all groups'))
 				{
-					$groupMember = new GroupMember();
-					$groupMember->user_id = App::user()->id;
-					$groupMember->group_id = $id;
-					$groupMember->created = date("Y-m-d H:i:s");
-					$groupMember->save();
+					$group_member = new GroupMember();
+					$group_member->user_id = App::user()->id;
+					$group_member->group_id = $id;
+					$group_member->created = date("Y-m-d H:i:s");
+					$group_member->save();
 
 					return [
 						'message' => 'You have joined ' . $group->name,
@@ -235,17 +258,17 @@ class GroupsApiController
 	 */
 	public function leaveGroupAction($id)
 	{
-		$groupData = Group::find($id);
+		$group_data = Group::find($id);
 
-		if ($groupData)
+		if ($group_data)
 		{
 			if (App::user()->hasPermission('groups: join groups'))
 			{
-				$groupMember = GroupMember::where('user_id = ? AND group_id = ?', [App::user()->id, $id])->first();
-				$groupMember->delete();
+				$group_member = GroupMember::where('user_id = ? AND group_id = ?', [App::user()->id, $id])->first();
+				$group_member->delete();
 
 				return [
-					'message' => 'You have left ' . $groupData->name,
+					'message' => 'You have left ' . $group_data->name,
 					'user' => App::user()
 				];
 			}
@@ -256,27 +279,82 @@ class GroupsApiController
 		App::abort(404, __('This group does not exist.'));
 	}
 
-	// Settings stuff
+	/**
+	 * @Route("/{id}/discussion")
+	 * @Method({"POST"})
+	 * @Request({"id":"int", "content":"array"}, csrf=true)
+	 */
+	public function postDiscussionAction($id, $content)
+	{
+		$group = Group::query()->where('id = ?', [$id])->related('group_members')->first();
+
+		if ($group)
+		{
+			if (App::user()->hasPermission('groups: post discussions'))
+			{
+				if ($group->userIsInGroup(App::user()) || App::user()->hasPermission('groups: manage all groups'))
+				{
+					$content['user_id'] = App::user()->id;
+					$discussion_post = $group->postDiscussion($content);
+					$post = GroupDiscussion::query()->where('id = ?', [$discussion_post->id])->related('user')->first();
+
+					return [
+						'message' => 'You have posted to the discussion',
+						'group_discussion_post' => $post
+					];
+				}
+
+				App::abort(403, __('You do not have permission to post a group discussion in a group you haven\'t joined.'));
+			}
+
+			App::abort(403, __('You do not have permission to post a group discussion.'));
+
+		}
+		App::abort(404, __('This group does not exist.'));
+	}
 
 	/**
-	 * @Route("/update_settings")
-	 * @Method({"GET", "PUT"})
-	 * @Request({"config":"array"}, csrf=true)
- 	 * @Access("groups: manage all groups")
+	 * @Route("/kick/{id}")
+	 * @Method({"POST"})
+	 * @Request({"id":"int"}, csrf=true)
 	 */
-	public function updateSettingsAction($config)
+	public function kickMemberAction($id)
 	{
-		// Before production I need to make sure that no array values are
-		// inserted that aren't in the base config.
+		$member = GroupMember::find($id);
 
-		foreach ($config as $key => $value)
+		if ($member)
 		{
-			App::config('groups')->set($key, $value);
+			$member->delete();
 		}
+	}
 
-		return [
-			'message' => 'The Group application\'s configuration was updated.'
-		];
+	/**
+	 * @Route("/discussion/{id}", methods="DELETE")
+	 * @Request({"id":"int"}, csrf=true)
+	 */
+	public function deleteDiscussionPostAction($id)
+	{
+		$discussion = GroupDiscussion::find($id);
+
+		if ($discussion)
+		{
+			if (App::user()->hasPermission('groups: post discussions'))
+			{
+				if ($discussion->user_id == App::user()->id
+					|| App::user()->hasPermission('groups: manage all groups'))
+				{
+					$discussion->delete();
+
+					return [
+						'message' => 'The discussion post was deleted successfully.'
+					];
+				}
+			}
+
+			App::abort(403, __('You do not have permission to delete a group discussion.'));
+
+		}
+		App::abort(404, __('This discussion post does not exist.'));
 	}
 
 }

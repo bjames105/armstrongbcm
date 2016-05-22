@@ -54,10 +54,12 @@
 			var groupsMap = {};
 			var groupsMapByCategory = {};
 			var groupCategoriesMap = {};
+			var usersGroups = [];
 
 			this.groupsMap = groupsMap;
 			this.groupsMapByCategory = groupsMapByCategory;
 			this.groupCategoriesMap = groupCategoriesMap;
+			this.usersGroups = usersGroups;
 
 			var mapGroup = function (group)
 			{
@@ -89,12 +91,31 @@
 				mapGroupCategory(this.categories[i]);
 			}
 
+			if (typeof this.currentUser != undefined)
+			{
+				for (var i = 0; i < this.groups.length; i++)
+				{
+					for (var j = 0; j < this.groups[i].group_members.length; j++)
+					{
+						var member = this.groups[i].group_members[j];
+
+						if (member.id == this.currentUser.id)
+						{
+							usersGroups.push(this.groups[i]);
+							break;
+						}
+					}
+				}
+			}
+
 		},
 
 		data: {
 			groups: window.$data.groups,
+			currentUser: window.$data.current_user,
 			categories: window.$data.group_categories,
 			displayMessage: window.$data.displayMessage,
+			usersGroups : [],
 			groupsMap: {},
 			groupsMapByCategory: {},
 			groupCategoriesMap: {},
@@ -113,10 +134,12 @@
 		},
 
 		methods: {
-			add: function (e) {
+			add: function (e)
+			{
 				e.preventDefault();
 
-				this.resource.save({ new_group: this.newGroup }).then(function (data) {
+				this.resource.save({ new_group: this.newGroup }).then(function (data)
+				{
 					var response = data.data;
 					this.groups.push(response.group);
 					UIkit.notify(response.message, '');
@@ -126,8 +149,10 @@
 				this.newGroup = { };
 			},
 
-			remove: function (entry) {
-				this.resource.delete({ id: entry.id }).then(function (data) {
+			remove: function (entry)
+			{
+				this.resource.delete({ id: entry.id }).then(function (data)
+				{
 					this.groups.$remove(entry);
 					delete this.groupsMap[entry.id];
 					delete this.groupsMapByCategory[group.category_id];
@@ -137,8 +162,10 @@
 				});
 			},
 
-			save: function (entry) {
-				this.resource.update({ group: entry }).then(function (data) {
+			save: function (entry)
+			{
+				this.resource.update({ group: entry }).then(function (data)
+				{
 					this.groups.$remove(entry);
 					UIkit.notify(data.message, '');
 				}, function (error) {

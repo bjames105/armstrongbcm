@@ -62,10 +62,10 @@
 					</select>
 				</div>
 			</div>
-			<div class="uk-form-file uk-width-1-1 uk-text-left uk-margin-top">
+			<!-- <div class="uk-form-file uk-width-1-1 uk-text-left uk-margin-top">
 			    <button @click="upload" class="uk-button uk-button-primary" type="button"><i class="uk-icon-upload"></i> Choose a background image</button>
 			    <input type="file" id="upload" style="display: none;"/>
-			</div>
+			</div> -->
 		</form>
 		<form class="uk-form uk-width-1-1 uk-margin-bottom">
 			<h2>Description</h2>
@@ -90,9 +90,18 @@
 						<label class="uk-form-label">Group Gender</label>
 						<div class="uk-form-controls">
 							<div data-uk-button-radio>
-							    <button type="button" class="uk-button" @click="setGroupGender('c')">Co-ed</button>
-							    <button type="button" class="uk-button" @click="setGroupGender('m')">Guys</button>
-							    <button type="button" class="uk-button"  click="setGroupGender('f')">Girls</button>
+							    <button type="button"
+									@click="setGroupGender('c')"
+									class="uk-button"
+									:class="{ 'uk-active' : (group.gender == 'c') }">Co-ed</button>
+							    <button type="button"
+									class="uk-button"
+									:class="{ 'uk-active' : (group.gender == 'm') }"
+									@click="setGroupGender('m')">Guys</button>
+							    <button type="button"
+									class="uk-button"
+									:class="{ 'uk-active' : (group.gender == 'f') }"
+									@click="setGroupGender('f')">Girls</button>
 							</div>
 						</div>
 				    </div>

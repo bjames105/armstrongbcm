@@ -12,10 +12,13 @@ module.exports = {
 
 	methods: {
 		save: function (config) {
-			this.resource.update({ 'config': window.$data.config}).then(function (resp) {
+			this.resource.update({ 'config': window.$data.config}).then(function (resp)
+			{
 				var message = resp.data.message;
 				UIkit.notify(message, '');
-			}, function (error) {
+			},
+			function (error)
+			{
 				var message = error.data.message;
 				UIkit.notify(message, 'danger');
 			});

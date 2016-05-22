@@ -10,6 +10,20 @@ module.exports = {
 		groups: window.$data.groups,
 		searchText: '',
 		groupToDelete: { name: '' },
+		weekdays: {
+			M: 'Monday',
+			T: 'Tuesday',
+			W: 'Wednesday',
+			R: 'Thursday',
+			F: 'Friday',
+			S: 'Saturday',
+			U: 'Sunday'
+		},
+		genders: {
+			c: 'Co-ed',
+			m: 'Men\'s',
+			f: 'Women\'s'
+		},
 		newGroup: { }
 	},
 
@@ -49,3 +63,14 @@ module.exports = {
 };
 
 Vue.ready(module.exports);
+
+/**
+ * Vue filter to make a simple timestamp for an ISO date.
+ * http://jsfiddle.net/bryan_k/44kqtpeg/
+ *
+ * @param {String} value The value string.
+ */
+Vue.filter('date', function(value) {
+	var date = new Date(value);
+	return date.toLocaleDateString();
+});

@@ -11,6 +11,8 @@ module.exports = {
 		group: window.$data.group,
 		currentUser: window.$data.current_user,
 		groupCategories: window.$data.group_categories,
+		newDiscussionPost: { content: '' },
+		postToDelete: null,
 		weekdays: {
 			M: 'Monday',
 			T: 'Tuesday',
@@ -67,7 +69,7 @@ module.exports = {
 			{
 				this.group.group_members.push(response.data.user);
 				this.$notify("<i class='uk-icon-check'></i> " + response.data.message);
-		    }, function (response)
+		    }, function (error)
 			{
 		        this.$notify(error.data.message, 'danger');
 		    });
@@ -86,10 +88,42 @@ module.exports = {
 				}
 
 				this.$notify("<i class='uk-icon-check'></i> " + response.data.message);
-		    }, function (response)
+		    }, function (error)
 			{
 		        this.$notify(error.data.message, 'danger');
 		    });
+		},
+		postDiscussion: function (e)
+		{
+			e.preventDefault();
+
+			this.$http({url: 'api/groups/' + this.group.id + '/discussion', method: 'POST', data: { content: this.newDiscussionPost }})
+			.then(function (response)
+			{
+				this.group.group_discussion.push(response.data.group_discussion_post);
+				this.newDiscussionPost = {};
+				this.$notify("<i class='uk-icon-check'></i> " + response.data.message);
+			}, function (error)
+			{
+				this.$notify(error.data.messsage, 'danger')
+			});
+		},
+		setPostToDelete: function (post)
+		{
+			this.postToDelete = post;
+		},
+		deleteDiscussionPost: function (discussionPost)
+		{
+			this.$http({url: 'api/groups/discussion/' + discussionPost.id, method: 'DELETE'})
+			.then(function (response)
+			{
+				this.group.group_discussion.$remove(discussionPost);
+				this.postToDelete = null;
+				this.$notify("<i class='uk-icon-check'></i> " + response.data.message);
+			}, function (error)
+			{
+				this.$notify(error.data.messsage, 'danger')
+			});
 		},
 		userCanJoinGroup: function ()
 		{

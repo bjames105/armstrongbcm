@@ -7,12 +7,10 @@
             <i class="uk-icon-search"></i>
             <input type="text" v-model="searchText" placeholder="Search" class="uk-form-width-large">
         </div>
-		<div class="uk-width-1-3">{{ '{0} Groups|{1} One Group|]1,Inf[ %count% Groups' | transChoice groups.length {count:groups.length} }}</div>
-		<?php if ($user_can_create_group): ?>
-        <div class="uk-text-right uk-width-1-3">
+		<div class="uk-width-1-3"><span v-if="groups.length > 0">{{ '{0} Groups|{1} One Group|]1,Inf[ %count% Groups' | transChoice groups.length {count:groups.length} }}</span></div>
+		<?php if ($user_can_create_group): ?><div class="uk-text-right uk-width-1-3">
             <a href="<?= $view->url('@groups/create'); ?>" class="uk-button uk-button-primary"><i class="uk-icon-plus"></i> Create Group</a>
-        </div>
-		<?php endif; ?>
+        </div><?php endif; ?>
 		<!-- Trying to get a filter for weekdays -->
 		<!-- <div class="uk-width-1-1 uk-margin-top">
 			<div class="uk-grid">
@@ -27,6 +25,19 @@
 			</div>
 		</div> -->
     </div>
+	<div v-if="groups.length == 0" class="uk-margin-top">
+		<h2>There are no groups</h2>
+	</div>
+	<div class="uk-margin-top uk-grid" v-if="usersGroups.length > 0">
+		<div class="uk-width-1-1">
+			<h3>Your Groups</h3>
+		</div>
+		<div class="uk-width-1-3" v-for="group in usersGroups">
+			<a href="{{ '<?= $view->url('@groups'); ?>/' + group.id }}"><div class="uk-panel uk-panel-box uk-margin-top">
+				<h4>{{ group.name }}</h4>
+			</div></a>
+		</div>
+	</div>
     <div class="uk-margin-top" v-for="category in categories | filterBy searchText in 'name'" v-if="groupsMapByCategory[category.id].length > 0">
         <h3>{{ category.name }}</h3>
         <p>{{ category.description }}</p>

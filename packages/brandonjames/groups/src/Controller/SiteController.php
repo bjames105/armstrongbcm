@@ -31,6 +31,7 @@ class SiteController
 		$displayMessage = $this->config['displayMessage'];
 		$title = 'Groups';
 		$user_can_create_group = App::user()->hasAccess('groups: create groups');
+		$user_can_post_discussions = App::user()->hasPermission('groups: post discussions') && $this->config['discussionsEnabled'] == 1;
 		$groupCategoriesData = GroupCategory::findAll();
 		$group_categories = [];
 		$current_user = (App::user()->isAuthenticated()) ? App::user() : null;
@@ -41,7 +42,7 @@ class SiteController
 		}
 
 		if (!is_null($id)) {
-			$group = Group::query()->where('id = ?', [$id])->related('user')->related('group_category')->related('group_members')->first();
+			$group = Group::query()->where('id = ?', [$id])->related('user')->related('group_category')->related('group_members')->related('group_discussion')->first();
 
 			$user_can_edit_group = (App::user()->hasAccess('groups: manage all groups')
 				|| (App::user()->hasAccess('groups: manage own groups') && $group->user_id == App::user()->id)) ? true : false;
@@ -67,6 +68,7 @@ class SiteController
 				'user_can_edit_group' => $user_can_edit_group,
 				'user_can_create_group' => $user_can_create_group,
 				'user_can_join_group' => $user_can_join_group,
+				'user_can_post_discussions' => $user_can_post_discussions,
 				'$data' => [
 					'group_categories' => $group_categories,
 					'current_user' => $current_user,
@@ -75,10 +77,10 @@ class SiteController
 			];
 		}
 
-		$groupsData = Group::query()->related('user')->related('group_category')->related('group_members')->get();
+		$groups_data = Group::query()->related('user')->related('group_category')->related('group_members')->get();
 		$groups = [];
 
-		foreach ($groupsData as $group)
+		foreach ($groups_data as $group)
 		{
 			$groups[] = $group;
 		}
@@ -92,7 +94,7 @@ class SiteController
 			'$data' => [
 				'groups' => $groups,
 				'group_categories' => $group_categories,
-				'currentUser' => $current_user,
+				'current_user' => $current_user,
 				'displayMessage' => $displayMessage
 			]
 		];

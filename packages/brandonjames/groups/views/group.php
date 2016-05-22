@@ -52,7 +52,10 @@
 			<div class="uk-width-large-1-5 uk-width-small-1-4">
 				<i class="uk-icon-users uk-icon-large uk-display-block uk-margin-small-bottom"></i>
 				<div>Members</div>
-				<div class="uk-text-bold"><a href="#group-members" data-uk-modal>{{ group.group_members.length + ' Members' }}</a></div>
+				<div class="uk-text-bold" v-if="!userCreatedGroup()"><a href="#group-members" data-uk-modal>{{ group.group_members.length + ' Members' }}</a></div>
+				<div class="uk-text-bold" v-if="userCreatedGroup()">
+					<div class="uk-text-bold"><a href="#group-members" data-uk-modal data-uk-tooltip title="Pick max member count and member gender">{{ group.group_members.length + ' Members' }}</a></div>
+				</div>
 			</div>
 			<div class="uk-width-large-1-5 uk-width-small-1-1">
 				<div>
@@ -111,45 +114,101 @@
 			</div><?php endif; ?>
 			<div id="discussions" class="uk-width-1-1">
 				<h2>Discussion</h2>
-				<form class="uk-form">
+				<?php if ($user_can_post_discussions): ?><form class="uk-form">
 					<textarea v-model="newDiscussionPost.content" class="uk-width-1-1 uk-margin-small-bottom" placeholder="What do you want to talk about?" style="resize: vertical; min-height: 100px"></textarea>
-					<button type="button" class="uk-button uk-button-primary"><i class="uk-icon-plus"></i> Make Discussion Post</button>
-				</form>
+					<button @click="postDiscussion" type="button" class="uk-button uk-button-primary"><i class="uk-icon-plus"></i> Make Discussion Post</button>
+				</form><?php endif; ?>
 				<ul class="uk-list uk-list-line">
-					<li></li>
+					<li v-for="post in group.group_discussion" class="uk-grid">
+						<div class="uk-width-1-10"><img class="uk-comment-avatar group-member" :alt="post.user.name" v-gravatar="post.user.email"></div>
+						<div class="uk-width-9-10 uk-position-relative">
+							<strong>{{ post.user.name }}</strong>
+							<p>{{ post.content }}</p>
+							<a href="#delete-post-confirmation"
+								v-if="post.user.id == currentUser.id"
+								@click="setPostToDelete(post)"
+								title="Delete Post"
+								data-uk-tooltip
+								data-uk-modal
+								class="uk-position-top-right"><strong><i class="uk-icon-close"></i></a>
+						</div>
+					</li>
 				</ul>
 			</div>
 		</div>
 		<div id="group-members" class="uk-modal">
 		    <div class="uk-modal-dialog">
 				<a class="uk-modal-close uk-close"></a>
-				<div class="uk-modal-header">{{ '{0} Members|{1} One Member|]1,Inf[ %count% Members' | transChoice group.group_members.length {count:group.group_members.length} }}</div>
-				<ul class="uk-list uk-list-line">
-					<li v-for="member in group.group_members"><img class="uk-comment-avatar group-member" :alt="member.name" v-gravatar="member.email">{{ member.name }}</li>
-				</ul>
-		    </div>
+				<div v-if="userCreatedGroup()">
+					<div class="uk-modal-header">Choose Member Gender and Maximum Size</div>
+					<form class="uk-form uk-form-horizontal" data-uk-margin>
+						<div class="uk-form-row">
+					        <label class="uk-form-label" for="max-members">Maximum Group size</label>
+					        <div class="uk-form-controls"><input type="number" id="max-members" v-model="group.max_members"/></div>
+							<label class="uk-form-label">Group Gender</label>
+							<div class="uk-form-controls">
+								<div data-uk-button-radio>
+								    <button type="button"
+										@click="setGroupGender('c')"
+										class="uk-button"
+										:class="{ 'uk-active' : (group.gender == 'c') }">Co-ed</button>
+								    <button type="button"
+										class="uk-button"
+										:class="{ 'uk-active' : (group.gender == 'm') }"
+										@click="setGroupGender('m')">Guys</button>
+								    <button type="button"
+										class="uk-button"
+										:class="{ 'uk-active' : (group.gender == 'f') }"
+										@click="setGroupGender('f')">Girls</button>
+								</div>
+							</div>
+					    </div>
+						<div class="uk-form-row uk-align-right">
+							<button @click="update" class="uk-button uk-button-primary uk-margin-small-bottom">Save</button>
+						</div>
+					</form>
+					<div class="uk-modal-header">{{ '{0} Members|{1} One Member|]1,Inf[ %count% Members' | transChoice group.group_members.length {count:group.group_members.length} }}</div>
+					<ul class="uk-list uk-list-line">
+						<li v-for="member in group.group_members"><img class="uk-comment-avatar group-member" :alt="member.name" v-gravatar="member.email">{{ member.name }}</li>
+					</ul>
+			</div>
 		</div>
-		<?php if ($user_can_edit_group): ?><div id="weekday" class="uk-modal">
-		    <div class="uk-modal-dialog">
-				<a @click="update" class="uk-modal-close uk-close"></a>
-				<div class="uk-modal-header"><h2>Pick a Weekday for your group</h2></div>
-				<div class="uk-width-1-1 uk-margin-top">
-					<div data-uk-button-radio class="uk-grid-width-1-3">
-					    <button @click="setWeekday(weekday)" class="uk-button uk-button-primary uk-margin-small-bottom" :class="{ 'uk-active' : (weekdays[group.active_day] == weekday) }" v-for="weekday in weekdays" aria-selected="{{ (weekdays[group.active_day] == weekday) ? 'true' : 'false' }}">{{ weekday }}</button>
-					</div>
-				</div>
-		    </div>
-		</div>
-		<div id="delete-confirmation" class="uk-modal">
-			<div class="uk-modal-dialog">
-				<a class="uk-modal-close uk-close"></a>
-				<div class="uk-modal-header"><h2>Are you sure you want to delete {{ group.name }}?</h2></div>
-				<div class="uk-width-1-1 uk-margin-top">
-					<p>This action <em>cannot</em> be reversed</p>
-					<button class="uk-modal-close uk-button">Cancel</button>
-					<button @click="remove()" class="uk-button uk-button-danger">Yes, delete {{ group.name }}</button>
+	</div>
+	<?php if ($user_can_edit_group): ?><div id="weekday" class="uk-modal">
+	    <div class="uk-modal-dialog">
+			<a @click="update" class="uk-modal-close uk-close"></a>
+			<div class="uk-modal-header"><h2>Pick a Weekday for your group</h2></div>
+			<div class="uk-width-1-1 uk-margin-top">
+				<div data-uk-button-radio class="uk-grid-width-1-3">
+				    <button @click="setWeekday(weekday)"
+						class="uk-button uk-button-primary uk-margin-small-bottom"
+						:class="{ 'uk-active' : (weekdays[group.active_day] == weekday) }"
+						v-for="weekday in weekdays"
+						aria-selected="{{ (weekdays[group.active_day] == weekday) ? 'true' : 'false' }}">{{ weekday }}</button>
 				</div>
 			</div>
-		</div><?php endif; ?>
+	    </div>
+	</div>
+	<div id="delete-confirmation" class="uk-modal">
+		<div class="uk-modal-dialog">
+			<a class="uk-modal-close uk-close"></a>
+			<div class="uk-modal-header"><h2>Are you sure you want to delete {{ group.name }}?</h2></div>
+			<div class="uk-width-1-1 uk-margin-top">
+				<p>This action <em>cannot</em> be reversed</p>
+				<button class="uk-modal-close uk-button">Cancel</button>
+				<button @click="remove()" class="uk-button uk-button-danger">Yes, delete {{ group.name }}</button>
+			</div>
+		</div>
+	</div><?php endif; ?>
+	<div id="delete-post-confirmation" class="uk-modal">
+		<div class="uk-modal-dialog">
+			<a class="uk-modal-close uk-close"></a>
+			<div class="uk-modal-header"><h2>Are you sure you want to delete your post?</h2></div>
+			<div class="uk-width-1-1 uk-margin-top">
+				<p>This action <em>cannot</em> be reversed</p>
+				<button class="uk-modal-close uk-button">Cancel</button>
+				<button @click="deleteDiscussionPost(postToDelete)" class="uk-button uk-button-danger uk-modal-close">Yes, delete my post</button>
+			</div>
+		</div>
 	</div>
 </div>

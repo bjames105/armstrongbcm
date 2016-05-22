@@ -7,7 +7,8 @@ return [
 	'type' => 'extension',
 
 	'config' => [
-        'displayMessage' => 'Find a place to belong in the Armstrong BCM community'
+        'displayMessage' => 'Find a place to belong in the Armstrong BCM community',
+        'discussionsEnabled' => 1
 	],
 
 	'settings' => '@groups/settings',
@@ -28,7 +29,11 @@ return [
 		'groups: manage all groups' => [
 			'title' => 'Manage groups',
 			'description' => 'Allowed to manage all groups'
-		]
+		],
+        'groups: post discussions' => [
+            'title' => 'Post discussions to groups',
+            'description' => 'Allowed to respond to a group discussion'
+        ]
 	],
 
 	'autoload' => [

@@ -30,10 +30,10 @@ class GroupsController {
 	 */
 	public function manageAction()
 	{
-		$groupsData = Group::query()->related('user')->related('group_category')->related('group_members')->get();
+		$groups_data = Group::query()->related('user')->related('group_category')->related('group_members')->get();
 		$groups = [];
 
-		foreach ($groupsData as $group)
+		foreach ($groups_data as $group)
 		{
 			$groups[] = $group;
 		}

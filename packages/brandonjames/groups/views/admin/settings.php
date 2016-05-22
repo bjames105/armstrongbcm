@@ -33,18 +33,6 @@
                     </div>
 
                     <div class="uk-form-row">
-                        <span class="uk-form-label">Setting 1</span>
-                        <div class="uk-form-controls uk-form-controls-text">
-                            <p class="uk-form-controls-condensed">
-                                <label>
-                                    <input type="radio" value="">
-                                    Value <code>'/123'</code>
-                                </label>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="uk-form-row">
                         <label class="uk-form-label">Greeting Message</label>
                         <div class="uk-form-controls uk-form-controls-text">
                             <p class="uk-form-controls-condensed">
@@ -70,31 +58,10 @@
                     </div>
 
                     <div class="uk-form-row">
-                        <span class="uk-form-label">More Settings</span>
+                        <span class="uk-form-label">Enable group discussions</span>
                         <div class="uk-form-controls uk-form-controls-text">
-                            <p class="uk-form-controls-condensed">
-                                <label><input type="checkbox">Require something or not</label>
-                            </p>
-                            <p class="uk-form-controls-condensed">
-                                <input class="uk-form-small uk-form-width-mini" type="number" min="1"> amount
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="uk-form-row">
-                        <span class="uk-form-label">Appearance</span>
-                        <div class="uk-form-controls uk-form-controls-text">
-                            <p class="uk-form-controls-condensed">
-                                <label>Value
-                                    <select class="uk-form-small">
-                                        <option value="ASC">Option 1</option>
-                                        <option value="DESC">Option 2</option>
-                                    </select>
-                                </label>
-                            </p>
-                            <p class="uk-form-controls-condensed">
-                                <input type="checkbox"> More text stuff
-                                <input class="uk-form-small uk-form-width-mini" type="number" min="2" max="10"> number
+                            <p class="uk-form-controls">
+                                <label><input type="checkbox" v-model="config.discussionsEnabled"/> Enabled</label>
                             </p>
                         </div>
                     </div>

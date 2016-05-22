@@ -4,15 +4,15 @@ namespace brandonjames\groups\Model;
 
 use \Pagekit\Application as App;
 use \Pagekit\Database\ORM\ModelTrait;
-use \Pagekit\User\Model\User;
+use \Pagekit\User\Model\User as User;
 
 /**
- * @Entity(tableClass="@group_members")
+ * @Entity(tableClass="@group_discussions")
  */
-class GroupMember implements \JsonSerializable
+class GroupDiscussion implements \JsonSerializable
 {
     use ModelTrait;
-
+    
 	/** @Column(type="integer") @Id */
 	public $id;
 
@@ -22,14 +22,26 @@ class GroupMember implements \JsonSerializable
     /** @Column(type="integer") */
     public $group_id;
 
+    /** @Column(type="integer") */
+    public $parent;
+    
+    /** @Column(type="string") */
+    public $content;
+
+    /** @Column(type="datetime") */
+    public $created;
+
+    /** @Column(type="datetime") */
+    public $modified;
+
+    /** @BelongsTo(targetEntity="\brandonjames\groups\Model\GroupDiscussion", keyFrom="parent", keyTo="id") */
+    public $parent_post;
+
     /** @BelongsTo(targetEntity="\Pagekit\User\Model\User", keyFrom="user_id", keyTo="id") */
     public $user;
 
 	/** @BelongsTo(targetEntity="\brandonjames\groups\Model\Group", keyFrom="group_id", keyTo="id") */
     public $group;
-
-    /** @Column(type="datetime") */
-    public $created;
 
     public function jsonSerialize()
     {

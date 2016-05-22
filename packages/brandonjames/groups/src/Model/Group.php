@@ -68,24 +68,59 @@ class Group implements \JsonSerializable
      */
     public $group_members;
 
+    /**
+     * @HasMany(targetEntity="\brandonjames\groups\Model\GroupDiscussion", keyFrom="id", keyTo="group_id")
+     */
+    public $group_discussion;
+
+    public function userIsInGroup($user)
+    {
+        foreach ($this->group_members as $member)
+        {
+            if ($member->user_id == $user->id)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function postDiscussion($discussion_content = [])
+    {
+        $discussion_content['group_id'] = $this->id;
+        $discussion_post = GroupDiscussion::create($discussion_content);
+        $discussion_post->save();
+        return $discussion_post;
+    }
+
     public function jsonSerialize()
     {
         $data = [];
         $data['user'] = $this->user;
         $data['group_category'] = $this->group_category;
 
-        $groupMembers = [];
+        $group_members = [];
+        $group_discussion = [];
 
         // These group members are basically the User class
         if (sizeof($this->group_members) > 0)
         {
             foreach ($this->group_members as $member)
             {
-                $groupMembers[] = User::find($member->user_id);
+                $group_members[] = User::find($member->user_id);
             }
         }
 
-        $data['group_members'] = $groupMembers;
+        if (sizeof($this->group_discussion) > 0)
+        {
+            foreach ($this->group_discussion as $post)
+            {
+                $group_discussion[] = GroupDiscussion::query()->where('id = ?', [$post->id])->related('user')->first();
+            }
+        }
+
+        $data['group_members'] = $group_members;
+        $data['group_discussion'] = $group_discussion;
 
         return $this->toArray($data);
     }
