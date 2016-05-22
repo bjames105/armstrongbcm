@@ -3,6 +3,7 @@ module.exports = {
 	el: '#events',
 
 	ready: function () {
+		// A useless line to make sure my git config was changed properly
         var today = new Date();
 
 		this.resource = this.$resource('api/events{/id}');
@@ -28,7 +29,7 @@ module.exports = {
                 weeks: [],
                 events: []
             };
-            
+
             var date = new Date();
             var daysInMonth = getMonthLength(date);
             var week = 0;
