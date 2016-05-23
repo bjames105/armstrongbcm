@@ -3,13 +3,11 @@ module.exports = {
 	el: '#events',
 
 	ready: function () {
-		// A useless line to make sure my git config was changed properly
         var today = new Date();
 
 		this.resource = this.$resource('api/events{/id}');
         this.months = [ 'January', 'February', 'March', 'April', 'May', 'June',
             'July', 'August', 'September', 'October', 'November', 'December' ];
-        this.today = today;
         this.month = this.months[today.getMonth()];
 
         var getMonthLength = function (date)
@@ -21,36 +19,75 @@ module.exports = {
             return nextMonth.getDate();
         }
 
-        this.daysInMonth = getMonthLength(today);
-
-        var composeCalendar = function (date)
+		// Takes a Date object and returns a list of dates in a month
+		var composeCalendar = function (date)
         {
-            var calendar = {
-                weeks: [],
-                events: []
-            };
+            var calendar = [];
+			var monthLength = getMonthLength(date);
 
-            var date = new Date();
-            var daysInMonth = getMonthLength(date);
-            var week = 0;
-
-            for (var i = 1; i <= daysInMonth; i++)
-            {
-                var d = new Date();
+			for (var i = 1; i <= monthLength; i++)
+			{
+                var d = new Date(date.getTime());
                 d.setDate(i);
+				calendar.push(d);
+			}
 
-                if (d.getDay() == 0 || i == 1)
-                {
-                    week++;
-                    calendar.weeks[week] = [];
-                }
-
-                calendar.weeks[week].push(d);
-            }
             return calendar;
         }
 
-        this.calendar = composeCalendar(today);
+		// Takes an array of dates then turns it into a calendar that the UI can use
+		var calendarForView = function (cal)
+		{
+			var startsOnDay = cal[0].getDay();
+			var endsOnDay = cal[cal.length - 1].getDay();
+			var week = 0;
+			var calendar = { weeks: [] };
+			calendar.weeks[week] = [];
+
+			// Add the days in the calendar from the previous month to fill out
+			// the week
+			if (startsOnDay > 0)
+			{
+				for (var i = startsOnDay; i > 0; i--)
+				{
+					var date = new Date(cal[0].getTime());
+					date.setDate(date.getDate() - i);
+	                calendar.weeks[week].push(date);
+				}
+			}
+
+            for (var i = 0; i < cal.length; i++)
+            {
+				var date = cal[i];
+
+				if (date.getDay() == 0)
+				{
+					calendar.weeks[++week] = [];
+				}
+
+				calendar.weeks[week].push(date);
+            }
+
+			var lastWeek = calendar.weeks[calendar.weeks.length - 1];
+
+			if (lastWeek.length < 7)
+			{
+				var lastDayOfMonth = cal[cal.length - 1];
+				var i = 0;
+
+				while (lastWeek.length < 7)
+				{
+					var date = new Date(lastDayOfMonth.getTime());
+					date.setDate(date.getDate() + i++);
+
+					lastWeek.push(date);
+				}
+			}
+
+			return calendar;
+		}
+
+        this.calendar = calendarForView(composeCalendar(today));
 	},
 
 	data: {
